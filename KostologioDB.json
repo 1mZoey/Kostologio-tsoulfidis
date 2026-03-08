@@ -1,0 +1,855 @@
+
+[
+  {
+    "source": "Λακκωμα",
+    "region": "Χαλκιδική",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 800,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 100.0 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Σκρα",
+    "region": "Κεντ.Μακεδονία",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 1100,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 137.5 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Ερέτριας",
+    "region": "Εύβοια",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 1480,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 185.0 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Ολύμπου",
+    "region": "Όλυμπος",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 910,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 113.75 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Βόλλακας",
+    "region": "Δράμα",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 1600,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 200.0 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Πέρλα",
+    "region": "Αλβανία",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 950,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 118.75 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Θάσου",
+    "region": "Θάσος",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 1100,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 137.5 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Βεροίας λευκό",
+    "region": "Βέροια",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 600,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 75.0 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Ηγουμενίτσα",
+    "region": "Ήπειρος",
+    "category": "raw_load",
+    "unitType": "per_load",
+    "loadSpec": { "volume_m3": 8 },
+    "price": 1900,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_m3": 237.5 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Mocha",
+    "region": "Πορτογαλία",
+    "category": "raw_load",
+    "unitType": "per_m3",
+    "price": 600,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "notes": "Τιμή δοσμένη σε €/m3 στο αρχείο"
+  },
+  {
+    "source": "Λακκώμα",
+    "region": "Χαλκιδική",
+    "category": "hammer_load",
+    "unitType": "per_load",
+    "loadSpec": { "weight_t": 17 },
+    "price": 400,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_ton": 23.5294117647 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Σκρά",
+    "region": "Κεντρική Μακεδονία",
+    "category": "hammer_load",
+    "unitType": "per_load",
+    "loadSpec": { "weight_t": 17 },
+    "price": 780,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_ton": 45.8823529412 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Σχολάρι",
+    "region": "Θεσσαλονίκη",
+    "category": "hammer_load",
+    "unitType": "per_load",
+    "loadSpec": { "weight_t": 17 },
+    "price": 300,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_ton": 17.6470588235 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Βαρβάρα",
+    "region": "Χαλκιδική",
+    "category": "hammer_load",
+    "unitType": "per_load",
+    "loadSpec": { "weight_t": 17 },
+    "price": 600,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_ton": 35.2941176471 },
+    "chargingRule": "per_full_load"
+  },
+  {
+    "source": "Γαλατίστα",
+    "region": "Χαλκιδική",
+    "category": "hammer_load",
+    "unitType": "per_load",
+    "loadSpec": { "weight_t": 17 },
+    "price": 300,
+    "currency": "EUR",
+    "validFrom": "2025-01-01",
+    "normalizedPrices": { "per_ton": 17.6470588235 },
+    "chargingRule": "per_full_load"
+  },
+  { 
+    "name": "Οριζόντιο (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Οριζόντιο", "price": 4.0 }], 
+    "productivity": { "m2_per_day": 40 } 
+  },
+  { 
+    "name": "Κάθετο (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Κάθετο", "price": 4.0 }] },
+  { 
+    "name": "Γυαλιστική σειράς (μαρμάρων)", 
+    "line": "μαρμάρων", "unit": "m2", 
+    "baseProcesses": [{ "name": "Γυαλιστική σειράς", "price": 2.5 }], 
+    "productivity": { "m2_per_day": 100 } 
+  },
+  { 
+    "name": "Ξεφαρδιστήρας (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Ξεφαρδιστήρας", "price": 1.5 }] 
+  },
+  { 
+    "name": "Φρέζα (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Φρέζα", "price": 1.5 }] 
+  },
+  { 
+    "name": "Κεφαλοκόπτης (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Κεφαλοκόπτης", "price": 2.0 }] 
+  },
+  { 
+    "name": "Βαρέλα (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Βαρέλα", "price": 1.5 }], 
+    "productivity": { "m2_per_day": 60 } 
+ },
+ { 
+    "name": "Πολυκόφτης (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Πολυκόφτης", "price": 2.0 }] 
+ },
+ { 
+    "name": "Σύρμα (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "cut", 
+    "baseProcesses": [{ "name": "Σύρμα", "price_per_cut": 30.25, "default_cuts": 4 }] 
+ },
+ { 
+    "name": "Στοκάρισμα (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Στοκάρισμα", "price": 6.0 }] 
+ },
+ { 
+    "name": "Μουρελομηχανή (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m", 
+    "baseProcesses": [{ "name": "Μουρελομηχανή", "price": 2.5 }]
+ }, 
+ { 
+    "name": "Μουρελομηχανή", 
+    "price": 1.5, 
+    "context": { "variant": "low" } 
+ },
+ { 
+    "name": "Σκαπιτσαριστική (μαρμάρων)", 
+    "line": "μαρμάρων",
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Σκαπιτσαριστική", "price": 4.0 }] 
+ },
+ { 
+    "name": "Πρέσσα (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Πρέσσα", "price": 5.0 }] 
+ },
+ { 
+    "name": "Σχιστική (μαρμάρων)", 
+    "line": "μαρμάρων", 
+    "unit": "m2", 
+    "baseProcesses": [{ 
+        "name": "Σχιστική", 
+        "price": 6.0, 
+        "rule": "half_total" 
+        },
+        { 
+        "name": "Σχιστική", 
+        "price": 5.0, 
+        "rule": "half_total", 
+        "context": { "variant": "low" } 
+        }
+    ],
+    "productivity": { "m2_per_day": 80 }
+ },
+ { 
+    "name": "Οριζόντιο (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Οριζόντιο", "price": 9.0 }], 
+    "productivity": { "m2_per_day": 40 } 
+ },
+ { 
+    "name": "Κάθετο (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Κάθετο", "price": 9.0 }] 
+ },
+ { 
+    "name": "Γυαλιστική σειράς (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Γυαλιστική σειράς", "price": 2.5 }], 
+    "productivity": { "m2_per_day": 100 } 
+ },
+ { 
+    "name": "Ξεφαρδιστήρας (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Ξεφαρδιστήρας", "price": 1.5 }] 
+ },
+ { 
+    "name": "Φρέζα (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Φρέζα", "price": 2.0 }] 
+ },
+ { 
+    "name": "Κεφαλοκόπτης (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Κεφαλοκόπτης", "price": 2.5 }] 
+ },
+ { 
+    "name": "Βαρέλα (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Βαρέλα", "price": 1.5 }], 
+    "productivity": { "m2_per_day": 60 } 
+ },
+ { 
+    "name": "Πολυκόφτης (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Πολυκόφτης", "price": 2.0 }] 
+ },
+ { 
+    "name": "Σύρμα (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "cut", 
+    "baseProcesses": [{ "name": "Σύρμα", "price_per_cut": 30.25, "default_cuts": 4 }] 
+ },
+ { 
+    "name": "Στοκάρισμα (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Στοκάρισμα", "price": 6.0 }] 
+ },
+ { 
+    "name": "Μουρελομηχανή (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m", 
+    "baseProcesses": [
+        { "name": "Μουρελομηχανή", "price": 2.5 }, 
+        { "name": "Μουρελομηχανή", "price": 1.5, "context": { "variant": "low" } }
+    ]
+ },
+ { 
+    "name": "Σκαπιτσαριστική (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Σκαπιτσαριστική", "price": 4.0 }] 
+ },
+ { 
+    "name": "Πρέσσα (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [{ "name": "Πρέσσα", "price": 5.0 }] 
+ },
+ { 
+    "name": "Σχιστική (πέτρας)", 
+    "line": "πέτρας", 
+    "unit": "m2", 
+    "baseProcesses": [
+      { "name": "Σχιστική", "price": 6.0, "rule": "half_total" },
+      { "name": "Σχιστική", "price": 5.0, "rule": "half_total", "context": { "variant": "low" } }
+    ],
+    "productivity": { "m2_per_day": 80 }
+ },
+ { 
+    "name": "Οριζόντιο",       
+    "unit": "m2",  
+    "wagePerDay": 120, 
+    "productivity": { "m2_per_day": 40 } 
+ },
+ { 
+    "name": "Γυαλιστική",      
+    "unit": "m2",  
+    "wagePerDay": 200, 
+    "productivity": { "m2_per_day": 100 } 
+ },
+ {  "name": "Σχιστική",        
+    "unit": "m2",  
+    "wagePerDay": 200, 
+    "productivity": { "m2_per_day": 80 } 
+ },
+ { 
+    "name": "Βαρέλα",          
+    "unit": "m2",  
+    "wagePerDay": 80,  
+    "productivity": { "m2_per_day": 60 } 
+ },
+ { 
+    "name": "Φρέζα",           
+    "unit": "m2",  
+    "wagePerDay": 100, 
+    "productivity": { "m2_per_day": 75 } 
+ },
+ { 
+    "name": "Μουρελομηχανή",   
+    "unit": "m",   
+    "wagePerDay": 150, 
+    "productivity": { "m2_per_day": 60 } 
+ },
+ { 
+    "name": "Πρέσσα",          
+    "unit": "m2",  
+    "wagePerDay": 280, 
+    "productivity": { "m2_per_day": 80 } 
+ },
+ { 
+    "name": "Σκαπιτσαριστική", 
+    "unit": "m2",  
+    "wagePerDay": 80,  
+    "productivity": { "m2_per_day": 35 } 
+ },
+ { 
+    "name": "Κεφαλοκόπτης",    
+    "unit": "m2",  
+    "wagePerDay": 80 
+ },
+ { 
+    "name": "Πολυκόφτης",      
+    "unit": "m2",  
+    "wagePerDay": 200 
+ },
+ { 
+    "name": "Σύρμα",           
+    "unit": "cut", 
+    "wagePerDay": 80,  
+    "productivity": { "cuts_per_day": 4 } 
+ },
+ {
+    "costType": "Ρεύμα",
+    "allocations": {
+      "Οριζόντιο": 50.00, "Γυαλιστική": 8.00, "Σχιστική": 20.00, "Βαρέλα": 20.00
+    }
+  },
+  {
+    "costType": "Διαμάντι",
+    "allocations": {
+      "Οριζόντιο": 65.00, "Γυαλιστική": 0.00, "Σχιστική": 15.00, "Βαρέλα": 20.00,
+      "Φρέζα": 3.00, "Σύρμα": 14.00
+    }
+  },
+  {
+    "costType": "Αναλώσιμα",
+    "allocations": {
+      "Οριζόντιο": 4.00, "Γυαλιστική": 55.00, "Σχιστική": 4.00,
+      "Φρέζα": 3.00, "Μουρελομηχανή": 24.00, "Πρέσσα": 4.00,
+      "Κεφαλοκόπτης": 2.00, "Βαρέλα": 4.00
+    }
+  },
+  {
+    "costType": "Συντήρηση",
+    "allocations": {
+      "Οριζόντιο": 25.00, "Γυαλιστική": 10.00, "Σχιστική": 10.00, "Βαρέλα": 10.00,
+      "Φρέζα": 5.00, "Μουρελομηχανή": 5.00, "Πρέσσα": 5.00, "Σκαπιτσαριστική": 5.00,
+      "Κεφαλοκόπτης": 15.00, "Πολυκόφτης": 10.00, "Σύρμα": 10.00
+    }
+  },
+  { 
+    "machine": "Οριζόντιο",       
+    "unit": "m2", 
+    "unitCost": 8.0696 
+  },
+  { 
+    "machine": "Γυαλιστική",      
+    "unit": "m2", 
+    "unitCost": 2.6348 
+  },
+  { 
+    "machine": "Σχιστική",        
+    "unit": "m2", 
+    "unitCost": 3.3973 
+  },
+  { 
+    "machine": "Βαρέλα",          
+    "unit": "m2", 
+    "unitCost": 1.33333333 
+  },
+  { 
+    "machine": "Φρέζα",           
+    "unit": "m2", 
+    "unitCost": 1.69717333 
+  },
+  { 
+    "machine": "Μουρελομηχανή",   
+    "unit": "m2", 
+    "unitCost": 3.0284 
+  },
+  { 
+    "machine": "Πρέσσα",          
+    "unit": "m2", 
+    "unitCost": 3.5723 
+  },
+  { 
+    "machine": "Σκαπιτσαριστική", 
+    "unit": "m2", 
+    "unitCost": 2.44 
+  },
+  {
+    "name": "Σύρμα",
+    "pricePerCut": 30.25,
+    "aux": { "valueA": 2.4898, "valueB": 2.61184 },
+    "defaultCutsPerDay": 4
+  },
+  { 
+    "name": "Δάπεδο 002", 
+    "category": "floor", 
+    "baseUnit": "m2", 
+    "defaultThicknessMm": 20, 
+    "finishes": ["Φυσικό","Βελόνη","Αντικέ"] 
+  },
+  { 
+    "name": "Δάπεδο 003", 
+    "category": "floor", 
+    "baseUnit": "m2", 
+    "defaultThicknessMm": 20, 
+    "finishes": ["Φυσικό","Βελόνη","Αντικέ"] 
+  },
+  { 
+    "name": "Δάπεδο 1,3", 
+    "category": "floor", 
+    "baseUnit": "m2", 
+    "defaultThicknessMm": 13, 
+    "finishes": ["Φυσικό","Αντικέ","Παλαιωμένο"] 
+  },
+  { 
+    "name": "Επένδυση 20x7,5x1,3 Τούβλακι", 
+    "category": "cladding", 
+    "baseUnit": "m2", 
+    "defaultThicknessMm": 13, 
+    "finishes": ["Σκαπιτσαριστό"] },
+  { 
+    "name": "Κυβόλιθος 10x10x5", 
+    "category": "cobble", 
+    "baseUnit": "piece", 
+    "defaultThicknessMm": 50 
+  },
+  { 
+    "name": "Κυβόλιθος 10x10x10", 
+    "category": "cobble", 
+    "baseUnit": "piece",
+    "defaultThicknessMm": 100 
+  },
+  { 
+    "name": "Ψηφίδα", 
+    "category": "aggregate", 
+    "baseUnit": "m2" 
+  },
+  { 
+    "name": "Λέπι", 
+    "category": "texture", 
+    "baseUnit": "m2" 
+  },
+  {
+    "name": "Ριγωτό", 
+    "category": "texture", 
+    "baseUnit": "m2"
+  },
+  { 
+    "name": "Πυραμίδα", 
+    "category": "texture", 
+    "baseUnit": "m2" 
+  },
+  { 
+    "product": "Δάπεδο 002", 
+    "unit": "m2", 
+    "finish": "Φυσικό", 
+    "price": 11.19444444, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 002", 
+    "unit": "m2", 
+    "finish": "Βελόνη", 
+    "price": 17.69444444, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 002", 
+    "unit": "m2", 
+    "finish": "Αντικέ",  
+    "price": 14.69444444, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 003", 
+    "unit": "m2", 
+    "finish": "Φυσικό",  
+    "price": 12.61666667, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 1,3", 
+    "unit": "m2", 
+    "finish": "Φυσικό",  
+    "price": 8.74509804,  
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 1,3", 
+    "unit": "m2", 
+    "finish": "Παλαιωμένο", 
+    "price": 13.745098, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Δάπεδο 1,3", 
+    "unit": "m2", 
+    "finish": "Αντικέ",  
+    "price": 13.5980392, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Επένδυση 20x7,5x1,3 Τούβλακι", 
+    "unit": "m2", 
+    "finish": "Σκαπιτσαριστό", 
+    "price": 13.1568627, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "product": "Επένδυση 20x7,5x1,3 Τούβλακι", 
+    "unit": "m2", 
+    "finish": "Σκαπιτσαριστό", 
+    "price": 17.0, 
+    "validFrom": "2025-01-01", 
+    "context": { "thickness": "15" } 
+  },
+  { 
+    "product": "Επένδυση 20x7,5x1,3 Τούβλακι", 
+    "unit": "m2", 
+    "finish": "Σκαπιτσαριστό", 
+    "price": 17.17792793, 
+    "validFrom": "2025-01-01", 
+    "context": { "thickness": "20" } 
+  },
+  { 
+    "process": "Πρέσσα", 
+    "unit": "m2", 
+    "price": 5.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Σκαπιτσαριστική", 
+    "unit": "m2", 
+    "price": 4.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Σχιστική", 
+    "unit": "m2", 
+    "price": 6.0, 
+    "rule": "half_total", 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Σχιστική", 
+    "unit": "m2", 
+    "price": 5.0, 
+    "rule": "half_total", 
+    "context": { "variant": "low" }, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Κεφαλοκόπτης", 
+    "unit": "m2", 
+    "price": 2.5, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Φρέζα", 
+    "unit": "m2", 
+    "price": 2.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Μουρελομηχανή", 
+    "unit": "m",  
+    "price": 2.5, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Μουρελομηχανή", 
+    "unit": "m",  
+    "price": 1.5, 
+    "context": { "variant": "low" }, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Γυαλιστική σειράς", 
+    "unit": "m2", 
+    "price": 2.5, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Πολυκόφτης", 
+    "unit": "m2", 
+    "price": 2.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Στοκάρισμα", 
+    "unit": "m2", 
+    "price": 6.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Οριζόντιο (πέτρας)", 
+    "unit": "m2", 
+    "price": 9.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Κάθετο (πέτρας)",   
+    "unit": "m2", 
+    "price": 9.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Οριζόντιο (μαρμάρων)", 
+    "unit": "m2", 
+    "price": 4.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Κάθετο (μαρμάρων)",   
+    "unit": "m2", 
+    "price": 4.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Ξεφαρδιστήρας",       
+    "unit": "m2", 
+    "price": 1.5, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "process": "Σύρμα", 
+    "unit": "cut", 
+    "pricePerCut": 30.25, 
+    "defaultCuts": 4, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "source": "Λακκώμα", 
+    "thicknessCm": { "from": 3, "to": 5 }, 
+    "baseCostPerM2": 10.2226891, 
+    "validFrom": "2025-01-01",
+    "packaging": { "palletAddonPerM2": 1.0, "crateAddonPerM2": 4.0, "crateFlatFee": 40.0 } 
+  },
+  { 
+    "source": "Σκρά", 
+    "thicknessCm": { "from": 3, "to": 5 }, 
+    "baseCostPerM2": 13.4159664, 
+    "validFrom": "2025-01-01",
+    "packaging": { "palletAddonPerM2": 1.0, "crateAddonPerM2": 4.0, "crateFlatFee": 40.0 } 
+  },
+  { 
+    "source": "Σχολάρι", 
+    "thicknessCm": { "from": 3, "to": 5 }, 
+    "baseCostPerM2": 9.38235294, 
+    "validFrom": "2025-01-01",
+    "packaging": { "palletAddonPerM2": 1.0, "crateAddonPerM2": 4.0, "crateFlatFee": 40.0 } 
+  },
+  { 
+    "source": "Βαρβάρα", 
+    "thicknessCm": { "from": 3, "to": 5 }, 
+    "baseCostPerM2": 11.9033613, 
+    "validFrom": "2025-01-01",
+    "packaging": { "palletAddonPerM2": 1.0, "crateAddonPerM2": 4.0, "crateFlatFee": 40.0 } 
+  },
+  { 
+    "source": "Γαλατίστα", 
+    "thicknessCm": { "from": 3, "to": 5 }, 
+    "baseCostPerM2": 9.38235294, 
+    "validFrom": "2025-01-01",
+    "packaging": { "palletAddonPerM2": 1.0, "crateAddonPerM2": 4.0, "crateFlatFee": 40.0 } 
+  },
+  { 
+    "machine": "CNC", 
+    "thicknessCm": 2, 
+    "throughput_m_per_h": 4.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "machine": "CNC", 
+    "thicknessCm": 3, 
+    "throughput_m_per_h": 2.6, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Κυβόλιθος 10x10x5", 
+    "type": "cobble", 
+    "basePrice": 3.5, 
+    "barrelPrice": 3.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Λέπι",     
+    "type": "texture", 
+    "unit": "m2", 
+    "price": 6.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Ριγωτό",   
+    "type": "texture", 
+    "unit": "m2", 
+    "price": 2.5, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Ψηφίδα",   
+    "type": "texture", 
+    "unit": "m2", 
+    "price": 2.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Ψηφίδα",   
+    "type": "texture", 
+    "unit": "m2", 
+    "price": 3.0, 
+    "validFrom": "2025-01-01" 
+  },
+  { 
+    "item": "Ψηφίδα",   
+    "type": "texture", 
+    "unit": "m2", 
+    "price": 3.6, 
+    "validFrom": "2025-01-01" 
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+]

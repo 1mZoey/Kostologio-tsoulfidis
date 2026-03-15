@@ -1,7 +1,19 @@
 {
-  "dependencies": {
-    "express": "^5.2.1",
-    "node": "^22.22.1",
-    "vite": "^7.3.1"
+  "name": "kostologio-app",
+  "main": "main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"wait-on http://localhost:5000 && wait-on http://localhost:3000\"",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "electron": "electron .",
+    "electron-dev": "cross-env ELECTRON_IS_DEV=1 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "cd client && npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^30.5.1",
+    "electron-builder": "^24.13.3",
+    "wait-on": "^7.2.0"
   }
 }

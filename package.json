@@ -2,18 +2,23 @@
   "name": "kostologio-app",
   "main": "main.js",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\" \"wait-on http://localhost:5000 && wait-on http://localhost:3000\"",
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "electron": "electron .",
-    "electron-dev": "cross-env ELECTRON_IS_DEV=1 concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-    "build": "cd client && npm run build && electron-builder"
+    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5000 http://localhost:5173 && electron .\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "electron": "^30.5.1",
-    "electron-builder": "^24.13.3",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
     "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.9",
+    "lucide": "^0.577.0",
+    "lucide-react": "^0.577.0",
+    "tailwindcss": "^4.2.2"
   }
 }

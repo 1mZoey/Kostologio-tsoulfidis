@@ -5,16 +5,27 @@ import CostItem from '../models/CostItem.js';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  if (mongoose.connection.readyState !== 1) {
-    return res.json([{ _id: 'error_db', name: 'Βάση Δεδομένων Μη Διαθέσιμη', type: 'System', unit: 'N/A', costPerUnit: 0 }]);
-  }
   try {
-    const items = await CostItem.find();
+    const db = mongoose.connection.db;
+    const { category } = req.query;
+
+    const query = {};
+    if (category) query.category = category;
+
+    // For raw_load, only return ones with baseCostPerM2
+    const items = await db.collection('Kostologio')
+      .find({ 
+        source: { $exists: true },
+        baseCostPerM2: { $exists: true }  // ← only valid sources
+      })
+      .toArray();
+
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 router.post('/', async (req, res) => {
   try {

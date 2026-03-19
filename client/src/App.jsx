@@ -24,7 +24,7 @@ const menuItems = [
 
 function TopBar() {
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
-  
+  const { ipcRenderer } = window.require('electron');
   const toggleDarkMode = () => {
     const newDark = !isDark
     setIsDark(newDark)

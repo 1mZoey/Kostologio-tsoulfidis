@@ -1,14 +1,21 @@
 import { useState } from 'react'
 import { 
-  LayoutDashboard, Calculator, Package, Box, Search, User, Plus, 
+  LayoutDashboard, Calculator as CalculatorIcon, Package, Box, Search, User, Plus, 
   Moon, Sun, History as HistoryIcon
 } from 'lucide-react'
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import './App.css'
 
+import Dashboard from './pages/Dashboard'
+import Calculator from './pages/Calculator'
+import Products from './pages/Products'
+import Materials from './pages/Materials'
+import History from './pages/History'
+
+
 const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-  { name: 'Cost Calculator', icon: Calculator, path: '/calculator' },
+  { name: 'Cost Calculator', icon: CalculatorIcon, path: '/calculator' },
   { name: 'Products', icon: Package, path: '/products' },
   { name: 'Materials', icon: Box, path: '/materials' },
   { name: 'Past Calculations', icon: HistoryIcon, path: '/history' }
@@ -94,58 +101,9 @@ function Sidebar() {
   )
 }
 
-function Dashboard() {
-  return (
-    <div className="p-8 space-y-6">
-      <div className="flex items-center space-x-4">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <span className="px-4 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Live</span>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">€245,340</p>
-            </div>
-            <Calculator className="w-12 h-12 text-blue-500 opacity-75" />
-          </div>
-        </div>
-        {/* More stat cards... */}
-      </div>
-    </div>
-  )
-}
 
-function CostCalculator() {
-  return (
-    <div className="p-8 space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Cost Calculator</h1>
-      <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-8">New Production Batch</h2>
-        {/* Your cost calculator form goes here */}
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product</label>
-            <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>Marble Tile 20x20</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Quantity (m²)</label>
-            <input type="number" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // Placeholder pages
-const Products = () => <div className="p-8"><h1 className="text-3xl font-bold text-gray-900">Products</h1></div>
-const Materials = () => <div className="p-8"><h1 className="text-3xl font-bold text-gray-900">Materials</h1></div>
-const History = () => <div className="p-8"><h1 className="text-3xl font-bold text-gray-900">Past Calculations</h1></div>
 
 function AppContent() {
   return (
@@ -156,7 +114,7 @@ function AppContent() {
         <main className="flex-1 overflow-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/calculator" element={<CostCalculator />} />
+            <Route path="/calculator" element={<Calculator />} />
             <Route path="/products" element={<Products />} />
             <Route path="/materials" element={<Materials />} />
             <Route path="/history" element={<History />} />

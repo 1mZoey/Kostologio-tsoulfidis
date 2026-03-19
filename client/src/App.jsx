@@ -14,12 +14,13 @@ import History from './pages/History'
 
 
 const menuItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-  { name: 'Cost Calculator', icon: CalculatorIcon, path: '/calculator' },
-  { name: 'Products', icon: Package, path: '/products' },
-  { name: 'Materials', icon: Box, path: '/materials' },
-  { name: 'Past Calculations', icon: HistoryIcon, path: '/history' }
+  { name: 'Πίνακας Ελέγχου', icon: LayoutDashboard, path: '/' },
+  { name: 'Υπολογιστής Κόστους', icon: CalculatorIcon, path: '/calculator' },
+  { name: 'Προϊόντα', icon: Package, path: '/products' },
+  { name: 'Υλικά', icon: Box, path: '/materials' },
+  { name: 'Ιστορικό Υπολογισμών', icon: HistoryIcon, path: '/history' }
 ]
+
 
 function TopBar() {
   const [isDark, setIsDark] = useState(false)
@@ -31,7 +32,7 @@ function TopBar() {
         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-sm">K</span>
         </div>
-        <h1 className="text-xl font-semibold text-gray-900 truncate">Kostologio</h1>
+        <h1 className="text-xl font-semibold text-gray-900 truncate">Κοστολόγιο</h1>
       </div>
 
       {/* Search + Actions */}
@@ -40,14 +41,14 @@ function TopBar() {
           <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input 
             type="text" 
-            placeholder="Search products..." 
+            placeholder="Αναζήτηση προϊόντων..." 
             className="pl-10 pr-4 py-2 w-64 bg-gray-100 rounded-lg text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
           />
         </div>
         
         <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium">
           <Plus className="w-4 h-4" />
-          <span>New Calculation</span>
+          <span>Νέος Υπολογισμός</span>
         </button>
 
         {/* User Menu */}
@@ -73,7 +74,7 @@ function Sidebar() {
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col h-screen">
       <div className="p-6 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Μενού</h2>
       </div>
       
       <nav className="flex-1 py-6 space-y-1 px-3">

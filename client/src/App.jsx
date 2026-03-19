@@ -18,7 +18,7 @@ function TopBar() {
   const [isDark, setIsDark] = useState(false)
   
   return (
-    <div className="h-12 bg-white border-b border-gray-200 flex items-center px-6 shadow-sm">
+    <div className="h-12 bg-white border-b border-gray-200 flex items-center px-6 shadow-sm pr-40">
       {/* Logo + App Name (Draggable) */}
       <div className="flex items-center space-x-3 flex-1 min-w-0" style={{ WebkitAppRegion: 'drag' }}>
         <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">

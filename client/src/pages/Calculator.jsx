@@ -21,12 +21,20 @@ export default function Calculator() {
       .then((r) => setSources(r.data));
   }, []);
 
-  const handleProductChange = (e) => {
+  const handleProductChange = async (e) => {
     const name = e.target.value;
     setSelectedProduct(name);
     setSelectedFinish("");
-    const found = products.find((p) => p.name === name);
-    setAvailableFinishes(found?.finishes || []);
+    setResult(null);
+
+    if (name) {
+      const { data } = await axios.get(
+        `/api/calculator/available-finishes/${encodeURIComponent(name)}`,
+      );
+      setAvailableFinishes(data);
+    } else {
+      setAvailableFinishes([]);
+    }
   };
 
   const handleReset = () => {
@@ -64,7 +72,8 @@ export default function Calculator() {
       });
       setResult(data);
     } catch (err) {
-      console.error("Error details:", err.response?.data); // ← add this line
+      console.error("Error details:", err.response?.data);
+      setResult(null);
       setError(err.response?.data?.error || "Σφάλμα υπολογισμού");
     } finally {
       setLoading(false);
@@ -104,7 +113,7 @@ export default function Calculator() {
             onChange={handleProductChange}
             className='w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2'
           >
-            <option value=''>-- Επιλέξτε προϊόν --</option>
+            <option value='' disabled hidden>Επιλέξτε προϊόν</option>
             {products.map((p) => (
               <option key={p._id} value={p.name}>
                 {p.name}
@@ -124,7 +133,7 @@ export default function Calculator() {
               onChange={(e) => setSelectedFinish(e.target.value)}
               className='w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2'
             >
-              <option value=''>-- Επιλέξτε φινίρισμα --</option>
+              <option value='' disabled hidden>Επιλέξτε φινίρισμα</option>
               {availableFinishes.map((f) => (
                 <option key={f} value={f}>
                   {f}
@@ -144,7 +153,7 @@ export default function Calculator() {
             onChange={(e) => setSelectedSource(e.target.value)}
             className='w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2'
           >
-            <option value=''>-- Επιλέξτε πηγή --</option>
+            <option value='' disabled hidden>Επιλέξτε πηγή</option>
             {sources.map((s) => (
               <option key={s._id} value={s.source}>
                 {s.source}

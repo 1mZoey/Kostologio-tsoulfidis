@@ -4,6 +4,16 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
+router.get('/available-finishes/:productName', async (req, res) => {
+  const db = mongoose.connection.db;
+  const entries = await db.collection('Kostologio')
+    .find({ product: req.params.productName })
+    .toArray();
+  const finishes = entries.map(e => e.finish).filter(Boolean);
+  res.json(finishes);
+});
+
+
 router.post("/calculate", async (req, res) => {
   try {
     const { productName, finish, source, quantity, packaging } = req.body;

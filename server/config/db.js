@@ -23,17 +23,19 @@ const connectDB = async () => {
   console.log('MONGODB_URI loaded:', !!process.env.MONGODB_URI ? 'YES (full URI)' : (uri ? 'YES (constructed from user/pass)' : 'NO (undefined!)'));
 
   if (!uri) {
-    const err = new Error('No MongoDB connection info found in environment (MONGODB_URI or MONGODB_USER/MONGODB_PASS)');
-    console.error(err.message);
-    throw err;
+    console.error('No MongoDB connection info found in environment (MONGODB_URI or MONGODB_USER/MONGODB_PASS)');
+    console.log('Running in offline/disconnected mode.');
+    return;
   }
 
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 2000,
+    });
     console.log('MongoDB Atlas connected successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error.message);
-    throw error;
+    console.log('Running in offline/disconnected mode.');
   }
 };
 

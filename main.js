@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 let mainWindow = null;
@@ -13,8 +13,8 @@ app.whenReady().then(() => {
     titleBarStyle: "hidden",
     titleBarOverlay: {
       color: "#ffffff",
-      symbolColor: "#1e293b",
-      height: 42,
+      symbolColor: "#21252b",
+      height: 48,
     },
     webPreferences: {
       nodeIntegration: true,
@@ -30,6 +30,15 @@ app.whenReady().then(() => {
 
   mainWindow.on("closed", () => {
     mainWindow = null;
+  });
+
+  ipcMain.on('theme-change', (event, isDark) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setTitleBarOverlay({
+        color: isDark ? '#21252b' : '#ffffff',
+        symbolColor: isDark ? '#f8fafc' : '#21252b',
+      });
+    }
   });
 
   mainWindow.loadURL("http://localhost:5173")

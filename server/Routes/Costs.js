@@ -1,9 +1,13 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import CostItem from '../models/CostItem.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.json([{ _id: 'error_db', name: 'Βάση Δεδομένων Μη Διαθέσιμη', type: 'System', unit: 'N/A', costPerUnit: 0 }]);
+  }
   try {
     const items = await CostItem.find();
     res.json(items);

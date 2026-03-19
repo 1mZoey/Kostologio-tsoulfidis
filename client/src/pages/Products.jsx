@@ -15,36 +15,36 @@ function Products() {
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Προϊόντα</h1>
-        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Προϊόντα</h1>
+        <span className="px-3 py-1 bg-gray-100 dark:bg-[#61afef]/20 text-gray-700 dark:text-[#61afef] rounded-full text-xs font-semibold uppercase tracking-wider">
           {products.length} αντικείμενα
         </span>
       </div>
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-[#21252b] rounded-2xl border border-gray-200 dark:border-[#181a1f] shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Φόρτωση...</div>
+          <div className="p-8 text-center text-gray-400 dark:text-[#abb2bf]">Φόρτωση...</div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50/50 dark:bg-[#282c34] border-b border-gray-200 dark:border-[#181a1f]">
               <tr>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-700">Όνομα</th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-700">Κατηγορία</th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-700">Μονάδα</th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-700">Πάχος</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[#abb2bf]">Όνομα</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[#abb2bf]">Κατηγορία</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[#abb2bf]">Μονάδα</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-[#abb2bf]">Πάχος</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-[#181a1f]">
               {products.length === 0 ? (
-                <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-400">Δεν βρέθηκαν προϊόντα</td></tr>
+                <tr><td colSpan="4" className="px-6 py-8 text-center text-gray-400 dark:text-[#abb2bf]">Δεν βρέθηκαν προϊόντα</td></tr>
               ) : (
                 products.map((p, i) => (
-                  <tr key={p._id || i} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-2">
-                      <Package className="w-4 h-4 text-blue-400" />{p.name}
+                  <tr key={p._id || i} className="hover:bg-gray-50 dark:hover:bg-[#282c34]">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white flex items-center gap-3">
+                      <Package className="w-4 h-4 text-[#61afef]" />{p.name}
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{p.category || '—'}</td>
-                    <td className="px-6 py-4 text-gray-600">{p.baseUnit || p.unit || '—'}</td>
-                    <td className="px-6 py-4 text-gray-600">{p.defaultThicknessMm ? `${p.defaultThicknessMm}mm` : '—'}</td>
+                    <td className="px-6 py-4 text-gray-500 dark:text-[#abb2bf] text-sm">{p.category || '—'}</td>
+                    <td className="px-6 py-4 text-gray-500 dark:text-[#abb2bf] text-sm">{p.baseUnit || p.unit || '—'}</td>
+                    <td className="px-6 py-4 text-gray-500 dark:text-[#abb2bf] text-sm">{p.defaultThicknessMm ? `${p.defaultThicknessMm}mm` : '—'}</td>
                   </tr>
                 ))
               )}

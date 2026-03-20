@@ -7,8 +7,8 @@ app.whenReady().then(() => {
   console.log("🚀 Creating Electron window...");
 
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 900,
+    width: 1100,
+    height: 720,
     show: false,
     titleBarStyle: "hidden",
     titleBarOverlay: {
@@ -35,7 +35,7 @@ app.whenReady().then(() => {
   ipcMain.on('theme-change', (event, isDark) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setTitleBarOverlay({
-        color: isDark ? '#21252b' : '#ffffff',
+        color: isDark ? '#21252b' : '#f9fafb',
         symbolColor: isDark ? '#f8fafc' : '#21252b',
       });
     }

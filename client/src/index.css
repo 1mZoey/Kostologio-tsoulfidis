@@ -1,2 +1,48 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9fafb; /* Default light background gray-50 */
+}
+
+:root.dark ::-webkit-scrollbar-track,
+.dark ::-webkit-scrollbar-track {
+  background: #21252b; /* Match app dark background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* gray-300 */
+  border-radius: 10px;
+  border: 2px solid #f9fafb; /* Creates a padding effect */
+}
+
+:root.dark ::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb {
+  background: #3e4451; /* Subtler gray for dark mode */
+  border: 2px solid #21252b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af; /* gray-400 */
+}
+
+:root.dark ::-webkit-scrollbar-thumb:hover,
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4b5563; /* gray-600 */
+}
+
+/* For better transitions */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f9fafb;
+}
+
+.dark * {
+  scrollbar-color: #3e4451 #21252b;
+}

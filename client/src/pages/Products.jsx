@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getProducts } from '../services/api'
-import { Package, Calculator as CalculatorIcon } from 'lucide-react'
+import { Calculator as CalculatorIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 function Products() {
@@ -39,7 +39,7 @@ function Products() {
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Κατηγορία</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Μονάδα</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Πάχος</th>
-                <th className="text-right px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Ενέργειες</th>
+                <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Ενέργειες</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-[#181a1f]">
@@ -49,9 +49,6 @@ function Products() {
                 products.map((p, i) => (
                   <tr key={p._id || i} className="hover:bg-gray-50/50 dark:hover:bg-[#2c313c]/50 transition-colors">
                     <td className="px-8 py-5 font-medium text-gray-900 dark:text-gray-100 flex items-center gap-4">
-                      <div className="p-2 bg-gray-50 dark:bg-[#21252b] border border-gray-100 dark:border-[#181a1f] rounded-lg">
-                        <Package className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      </div>
                       {p.name}
                     </td>
                     <td className="px-8 py-5">
@@ -61,10 +58,10 @@ function Products() {
                     </td>
                     <td className="px-8 py-5 text-gray-500 dark:text-gray-400 text-sm">{p.baseUnit || p.unit || '—'}</td>
                     <td className="px-8 py-5 text-gray-500 dark:text-gray-400 text-sm">{p.defaultThicknessMm ? `${p.defaultThicknessMm}mm` : '—'}</td>
-                    <td className="px-8 py-5 text-right">
+                    <td className="px-8 py-5">
                       <button 
                         onClick={() => handleAddToCalculator(p)}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 text-xs font-bold rounded-lg transition-all active:scale-95 shadow-sm"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 text-xs font-bold rounded-lg transition-all active:scale-95 shadow-sm cursor-pointer"
                       >
                         <CalculatorIcon className="w-3.5 h-3.5" />
                         <span>Προσθήκη</span>

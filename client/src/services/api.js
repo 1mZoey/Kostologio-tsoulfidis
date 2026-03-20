@@ -6,7 +6,7 @@ const api = axios.create({
 
 export const getProducts = () => api.get('/products');
 export const getCostItems = () => api.get('/cost-items');
-export const getCalculations = () => api.get('/calculations');
-export const createCalculation = (data) => api.post('/calculations', data);
+export const getCalculations = () => api.get('/history');
+export const createCalculation = (data) => api.post('/history', data);
 
 export default api;

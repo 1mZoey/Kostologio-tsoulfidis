@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCostItems } from '../services/api'
-import { Box, Calculator as CalculatorIcon } from 'lucide-react'
+import { Calculator as CalculatorIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 function Materials() {
@@ -46,7 +46,7 @@ function Materials() {
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Κατηγορία</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Τύπος Μονάδας</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Τιμή (€)</th>
-                <th className="text-right px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Ενέργειες</th>
+                <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Ενέργειες</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-[#181a1f]">
@@ -56,9 +56,6 @@ function Materials() {
                 materials.map((m, i) => (
                   <tr key={m._id || i} className="hover:bg-gray-50/50 dark:hover:bg-[#2c313c]/50 transition-colors">
                     <td className="px-8 py-5 font-medium text-gray-900 dark:text-gray-100 flex items-center gap-4">
-                      <div className="p-2 bg-gray-50 dark:bg-[#21252b] border border-gray-100 dark:border-[#181a1f] rounded-lg">
-                        <Box className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      </div>
                       {m.name || m.source || '—'}
                     </td>
                     <td className="px-8 py-5">
@@ -70,10 +67,10 @@ function Materials() {
                     <td className="px-8 py-5 font-semibold text-gray-900 dark:text-gray-100">
                       €{m.price || m.costPerUnit || m.baseCostPerM2 || '—'}
                     </td>
-                    <td className="px-8 py-5 text-right">
+                    <td className="px-8 py-5">
                       <button 
                         onClick={() => handleAddToCalculator(m)}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 text-xs font-bold rounded-lg transition-all active:scale-95 shadow-sm"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 text-xs font-bold rounded-lg transition-all active:scale-95 shadow-sm cursor-pointer"
                       >
                         <CalculatorIcon className="w-3.5 h-3.5" />
                         <span>Προσθήκη</span>

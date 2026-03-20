@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
   try {
     const db = mongoose.connection.db;
     const products = await db.collection('products').find({}).toArray();
-    console.log('Products found:', products.length, products.map(p => p.name));
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });

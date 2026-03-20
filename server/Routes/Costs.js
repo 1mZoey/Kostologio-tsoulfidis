@@ -7,24 +7,13 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const db = mongoose.connection.db;
-    const { category } = req.query;
-
-    const query = {};
-    if (category) query.category = category;
-
-    // For raw_load, only return ones with baseCostPerM2
-    const items = await db.collection('Kostologio')
-      .find({ 
-        source: { $exists: true },
-        baseCostPerM2: { $exists: true }  // ← only valid sources
-      })
-      .toArray();
-
+    const items = await db.collection('raw_loads').find({}).toArray();
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 
 router.post('/', async (req, res) => {

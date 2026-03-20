@@ -20,7 +20,8 @@ const buildUri = () => {
 
 const connectDB = async () => {
   const uri = buildUri();
-  console.log('MONGODB_URI loaded:', !!process.env.MONGODB_URI ? 'YES (full URI)' : (uri ? 'YES (constructed from user/pass)' : 'NO (undefined!)'));
+  console.log('Full URI being used:', uri);
+  //console.log('MONGODB_URI loaded:', !!process.env.MONGODB_URI ? 'YES (full URI)' : (uri ? 'YES (constructed from user/pass)' : 'NO (undefined!)'));
 
   if (!uri) {
     console.error('No MongoDB connection info found in environment (MONGODB_URI or MONGODB_USER/MONGODB_PASS)');

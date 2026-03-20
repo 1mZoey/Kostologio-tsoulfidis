@@ -4,17 +4,19 @@ import Product from '../models/Product.js';
 
 const router = express.Router();
 
+// Products.js - query directly like the others
 router.get('/', async (req, res) => {
-  if (mongoose.connection.readyState !== 1) {
-    return res.json([{ _id: 'error_db', name: 'Βάση Δεδομένων Μη Διαθέσιμη', type: 'System', weightOrVolume: 0 }]);
-  }
   try {
-    const products = await Product.find();
+    const db = mongoose.connection.db;
+    const products = await db.collection('products').find({}).toArray();
+    console.log('Products found:', products.length, products.map(p => p.name));
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 
 router.post('/', async (req, res) => {
   try {

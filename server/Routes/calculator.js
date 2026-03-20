@@ -6,78 +6,48 @@ const router = express.Router();
 
 router.get('/available-finishes/:productName', async (req, res) => {
   const db = mongoose.connection.db;
-  const entries = await db.collection('Kostologio')
+  const entries = await db.collection('pricing')
     .find({ product: req.params.productName })
     .toArray();
   const finishes = entries.map(e => e.finish).filter(Boolean);
   res.json(finishes);
 });
 
-
 router.post("/calculate", async (req, res) => {
   try {
     const { productName, finish, source, quantity, packaging } = req.body;
-
     const db = mongoose.connection.db;
 
-    const allSources = await db
-      .collection("Kostologio") // ← .collection not .connection
-      .find({ thicknessCm: { $exists: true } }) // ← thicknessCm not thinknessCm
-      .toArray();
-    console.log(
-      "Available sources:",
-      allSources.map((s) => s.source),
-    );
-    console.log("Looking for source:", source);
-    // 1. Get raw material base cost
-
-    const rawCost = await db.collection("Kostologio").findOne({
-      source: source,
-      thicknessCm: { $exists: true },
-    });
-
+    // 1. Get raw material base cost from raw_loads
+    const rawCost = await db.collection("raw_loads").findOne({ source });
     if (!rawCost) return res.status(404).json({ error: "Πηγή δεν βρέθηκε" });
 
-    console.log("Looking for product: ", { productName, finish });
-    // 2. Get product processing price
+    // 2. Get product processing price from pricing
     let productPrice;
-
     if (finish) {
-      productPrice = await db.collection("Kostologio").findOne({
+      productPrice = await db.collection("pricing").findOne({
         product: productName,
-        finish: finish,
+        finish
       });
     } else {
-      // Try item field first, then product field without finish
-      productPrice = await db.collection("Kostologio").findOne({
-        $or: [
-          { item: productName },
-          { product: productName, finish: { $exists: false } },
-        ],
+      productPrice = await db.collection("pricing").findOne({
+        product: productName
       });
     }
-
-    // Handle both price and basePrice fields
-    const processingCost =
-      productPrice?.price ??
-      productPrice?.basePrice ??
-      productPrice?.barrelPrice ??
-      0;
-
-    console.log("productPrice found:", productPrice);
 
     if (!productPrice)
       return res.status(404).json({ error: "Προϊόν δεν βρέθηκε" });
 
+    const processingCost = productPrice?.price ?? productPrice?.basePrice ?? 0;
+
     // 3. Packaging addon
     let packagingAddon = 0;
     let packagingFlatFee = 0;
-
     if (packaging === "παλέτα") {
-      packagingAddon = rawCost.packaging?.palletAddonPerM2 || 1.0;
+      packagingAddon = rawCost.packaging?.palletAddonPerM2 ?? 1.0;
     } else if (packaging === "κιβώτιο") {
-      packagingAddon = rawCost.packaging?.crateAddonPerM2 || 4.0;
-      packagingFlatFee = rawCost.packaging?.crateFlatFee || 40.0;
+      packagingAddon = rawCost.packaging?.crateAddonPerM2 ?? 4.0;
+      packagingFlatFee = rawCost.packaging?.crateFlatFee ?? 40.0;
     }
 
     // 4. Calculate
@@ -100,5 +70,6 @@ router.post("/calculate", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 export default router;

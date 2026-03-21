@@ -7,12 +7,15 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const db = mongoose.connection.db;
-    const items = await db.collection('raw_loads').find({}).toArray();
+    const items = await db.collection('raw_loads')
+      .find({ baseCostPerM2: { $exists: true } })
+      .toArray();
     res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 
 

@@ -21,6 +21,8 @@ export default function Calculator() {
   const quantityRef = useRef(null);
   const productSelectRef = useRef(null);
 
+  const fmt = (val) => (val != null ? Number(val).toFixed(2) : "--");
+ 
   useEffect(() => {
     Promise.all([
       axios.get("/api/products"),
@@ -255,7 +257,7 @@ export default function Calculator() {
       </div>
 
       {/* Result */}
-      {result && (
+      {result && result.breakdown &&(
         <div className='mt-8 bg-white dark:bg-[#282c34] border border-gray-200 dark:border-[#181a1f] rounded-2xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500'>
           <div className="bg-gray-50 dark:bg-[#21252b] border-b border-gray-200 dark:border-[#181a1f] px-8 py-5 flex justify-between items-center">
             <h2 className='text-lg font-bold text-gray-900 dark:text-white tracking-tight'>
@@ -270,22 +272,22 @@ export default function Calculator() {
             <div className='space-y-3 text-sm text-gray-600 dark:text-gray-400'>
               <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
                 <span>Κόστος Πρώτης Ύλης</span>
-                <span className="font-medium text-gray-900 dark:text-gray-200">€{result.breakdown.baseCostPerM2.toFixed(2)}/m²</span>
+                <span className="font-medium text-gray-900 dark:text-gray-200">€{fmt(result.breakdown.baseCostPerM2)}/m²</span>
               </div>
               <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
                 <span>Κόστος Επεξεργασίας</span>
-                <span className="font-medium text-gray-900 dark:text-gray-200">€{result.breakdown.processingCostPerM2.toFixed(2)}/m²</span>
+                <span className="font-medium text-gray-900 dark:text-gray-200">€{fmt(result.breakdown.processingCostPerM2)}/m²</span>
               </div>
               {result.breakdown.packagingPerM2 > 0 && (
                 <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
                   <span>Συσκευασία</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-200">€{result.breakdown.packagingPerM2.toFixed(2)}/m²</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">€{fmt(result.breakdown.packagingPerM2)}/m²</span>
                 </div>
               )}
               
               <div className='flex justify-between items-center p-3 mt-4 bg-gray-50 dark:bg-[#21252b] rounded-lg border border-gray-100 dark:border-gray-800'>
                 <span className="font-semibold text-gray-900 dark:text-white">Σύνολο Υλικών ανά m²</span>
-                <span className="font-semibold text-gray-900 dark:text-white">€{result.breakdown.totalPerM2.toFixed(2)}</span>
+                <span className="font-semibold text-gray-900 dark:text-white">€{fmt(result.breakdown.totalPerM2)}</span>
               </div>
             </div>
 
@@ -299,7 +301,7 @@ export default function Calculator() {
               {result.breakdown.packagingFlatFee > 0 && (
                 <div className='flex justify-between items-center p-2'>
                   <span>Πάγιο Κιβωτίου</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-200">€{result.breakdown.packagingFlatFee.toFixed(2)}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">€{fmt(result.breakdown.packagingFlatFee)}</span>
                 </div>
               )}
 
@@ -308,7 +310,7 @@ export default function Calculator() {
                   <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Συνολικό Κόστος</span>
                 </div>
                 <div className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  €{result.grandTotal.toFixed(2)}
+                  €{fmt(result.grandTotal)}
                 </div>
               </div>
             </div>

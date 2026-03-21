@@ -10,6 +10,7 @@ import Calculator from './pages/Calculator'
 import Products from './pages/Products'
 import Materials from './pages/Materials'
 import History from './pages/History'
+import Admin from './pages/Admin';
 
 function AppContent() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -27,6 +28,7 @@ function AppContent() {
               <Route path="/products" element={<Products />} />
               <Route path="/materials" element={<Materials />} />
               <Route path="/history" element={<History />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
           </div>
         </main>

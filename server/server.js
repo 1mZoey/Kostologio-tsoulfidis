@@ -5,7 +5,8 @@ import connectDB from "./config/db.js";
 import productRoutes from "./Routes/Products.js";
 import costRoutes from "./Routes/Costs.js";
 import historyRoutes from "./Routes/History.js";
-import calculatorRouter from "./Routes/calculator.js"; // ← ADD THIS
+import calculatorRouter from "./Routes/calculator.js";
+import adminRouter from "./Routes/admin.js";
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ app.get("/", (req, res) => res.send("API running"));
 app.use("/api/products", productRoutes);
 app.use("/api/cost-items", costRoutes);
 app.use("/api/history", historyRoutes);
-app.use("/api/calculator", calculatorRouter); // ← ADD THIS
+app.use("/api/calculator", calculatorRouter); 
+app.use("/api/admin", adminRouter);
 
 const PORT = process.env.PORT || 5000;
 

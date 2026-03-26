@@ -1,23 +1,25 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import Product from '../models/Product.js';
+import express from "express";
+import mongoose from "mongoose";
+import Product from "../models/Product.js";
 
 const router = express.Router();
 
 // Products.js - query directly like the others
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
+  if (mongoose.connection.readyState !== 1)
+    return res
+      .status(503)
+      .json({ error: "Η βάση δεδομένων δεν είναι συνδεδεμένη." });
   try {
     const db = mongoose.connection.db;
-    const products = await db.collection('products').find({}).toArray();
+    const products = await db.collection("products").find({}).toArray();
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-
-
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const product = new Product(req.body);
     const saved = await product.save();
@@ -27,10 +29,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Product deleted' });
+    res.json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

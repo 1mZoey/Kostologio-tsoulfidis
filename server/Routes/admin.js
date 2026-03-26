@@ -5,9 +5,14 @@ const router = express.Router();
 
 // GET all 4 active overhead costs
 router.get("/overhead", async (req, res) => {
+  if (mongoose.connection.readyState !== 1)
+    return res
+      .status(503)
+      .json({ error: "Η βάση δεδομένων δεν είναι συνδεδεμένη." });
   try {
     const db = mongoose.connection.db;
-    const costs = await db.collection("overhead_costs")
+    const costs = await db
+      .collection("overhead_costs")
       .find({ validTo: null })
       .toArray();
     res.json(costs);
@@ -25,15 +30,17 @@ router.put("/overhead/:costType", async (req, res) => {
     const today = new Date();
 
     // Close current active entry
-    await db.collection("overhead_costs").updateOne(
-      { costType: req.params.costType, validTo: null },
-      { $set: { validTo: today } }
-    );
+    await db
+      .collection("overhead_costs")
+      .updateOne(
+        { costType: req.params.costType, validTo: null },
+        { $set: { validTo: today } },
+      );
 
     // Get old entry to carry over allocations
     const old = await db.collection("overhead_costs").findOne({
       costType: req.params.costType,
-      validTo: today
+      validTo: today,
     });
 
     // Insert new active entry
@@ -43,7 +50,7 @@ router.put("/overhead/:costType", async (req, res) => {
       perDay,
       allocations: old?.allocations ?? {},
       validFrom: today,
-      validTo: null
+      validTo: null,
     });
 
     res.json({ success: true, perMonth, perDay });

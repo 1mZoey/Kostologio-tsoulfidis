@@ -5,6 +5,8 @@ import CostItem from '../models/CostItem.js';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  if (mongoose.connection.readyState !== 1)
+  return res.status(503).json({ error: 'Η βάση δεδομένων δεν είναι συνδεδεμένη.' });
   try {
     const db = mongoose.connection.db;
     const items = await db.collection('raw_loads')

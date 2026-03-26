@@ -87,4 +87,4 @@ function Materials() {
   )
 }
 
-export default Materials
+export default Materials;

@@ -1,3 +1,10 @@
+## License
+
+
+**Copyright © 2026 Zoi Tsoulfidou. This project is not licensed for redistribution, modification, or commercial use without written permission.**
+
+
+
 # Kostologio
 
 Kostologio is a desktop cost calculation application built for a stone-processing workflow. It combines a React + Vite frontend, an Express + MongoDB backend, and Electron packaging to provide a fast internal tool for estimating production costs, packaging, and VAT.
@@ -122,6 +129,3 @@ This project is actively being expanded with additional cost analysis features, 
 - Production route management.
 - History and reporting improvements.
 
-## License
-
-This project is shared as a portfolio project. No commercial license has been declared.

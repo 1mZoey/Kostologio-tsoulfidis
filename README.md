@@ -5,7 +5,7 @@
 
 
 
-# Kostologio
+# Cost Estimator (Kostologio)
 
 Kostologio is a desktop cost calculation application built for a stone-processing workflow. It combines a React + Vite frontend, an Express + MongoDB backend, and Electron packaging to provide a fast internal tool for estimating production costs, packaging, and VAT.
 

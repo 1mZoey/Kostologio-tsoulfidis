@@ -21,32 +21,37 @@ export default function Calculator() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [widthCm, setWidthCm] = useState("");
 
   const quantityRef = useRef(null);
   const productSelectRef = useRef(null);
+  const selectedProductData = products.find((p) => p.name === selectedProduct);
+  const isTradeGood =
+    selectedProductData?.tradeGood === true ||
+    selectedProductData?.tradeGood === "true" ||
+    selectedProductData?.tradeGood === "True";
 
   const fmt = (val) => (val != null ? Number(val).toFixed(2) : "--");
 
   useEffect(() => {
-    Promise.all([
-      axios.get("/api/products"),
-      axios.get("/api/cost-items?category=raw_load"),
-    ]).then(([prodRes, sourceRes]) => {
-      setProducts(prodRes.data);
-      setSources(sourceRes.data);
+    Promise.all([axios.get("/api/products"), axios.get("/api/sources")]).then(
+      ([prodRes, sourceRes]) => {
+        setProducts(prodRes.data);
+        setSources(sourceRes.data);
 
-      const item = location.state?.selectedItem;
-      if (item) {
-        if (item.type === "product") {
-          setSelectedProduct(item.name);
-          fetchAvailableFinishes(item.name);
-        } else if (item.type === "material") {
-          setSelectedSource(item.source);
+        const item = location.state?.selectedItem;
+        if (item) {
+          if (item.type === "product") {
+            setSelectedProduct(item.name);
+            fetchAvailableFinishes(item.name);
+          } else if (item.type === "material") {
+            setSelectedSource(item.source);
+          }
+        } else {
+          if (productSelectRef.current) productSelectRef.current.focus();
         }
-      } else {
-        if (productSelectRef.current) productSelectRef.current.focus();
-      }
-    });
+      },
+    );
   }, [location.state]);
 
   const fetchAvailableFinishes = async (name) => {
@@ -56,7 +61,8 @@ export default function Calculator() {
         `/api/calculator/available-finishes/${encodeURIComponent(name)}`,
       );
       setAvailableFinishes(data);
-    } catch {
+    } catch (err) {
+      console.error("Finish fetch error:", err.response?.data || err.message);
       setAvailableFinishes([]);
     }
   };
@@ -78,6 +84,7 @@ export default function Calculator() {
     setAvailableFinishes([]);
     setResult(null);
     setError("");
+    setWidthCm("");
     if (productSelectRef.current) productSelectRef.current.focus();
   };
 
@@ -87,7 +94,7 @@ export default function Calculator() {
     if (
       !selectedProduct ||
       (needsFinish && !selectedFinish) ||
-      !selectedSource ||
+      (!isTradeGood && !selectedSource) ||
       !quantity
     ) {
       setError("Παρακαλώ συμπληρώστε όλα τα πεδία.");
@@ -99,9 +106,10 @@ export default function Calculator() {
       const { data } = await axios.post("/api/calculator/calculate", {
         productName: selectedProduct,
         finish: selectedFinish,
-        source: selectedSource,
+        source: isTradeGood ? undefined : selectedSource,
         quantity: parseFloat(quantity),
         packaging,
+        widthCm: widthCm ? parseFloat(widthCm) : undefined,
       });
       setResult(data);
     } catch (err) {
@@ -114,25 +122,25 @@ export default function Calculator() {
   };
 
   return (
-    <div className='p-6 max-w-2xl mx-auto animate-in fade-in duration-300'>
-      <div className='flex items-center justify-between mb-8 pb-4 border-b border-gray-200 dark:border-[#181a1f]'>
-        <div className='flex items-center space-x-3'>
-          <CalculatorIcon className='w-6 h-6 text-gray-800 dark:text-gray-200' />
-          <h1 className='text-2xl font-bold text-gray-900 dark:text-white tracking-tight'>
+    <div className="p-6 max-w-2xl mx-auto animate-in fade-in duration-300">
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200 dark:border-[#181a1f]">
+        <div className="flex items-center space-x-3">
+          <CalculatorIcon className="w-6 h-6 text-gray-800 dark:text-gray-200" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
             Υπολογιστής Κοστολόγησης
           </h1>
         </div>
         <button
           onClick={handleReset}
-          className='flex items-center space-x-2 text-sm px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2c313c] transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400'
+          className="flex items-center space-x-2 text-sm px-3 py-1.5 rounded-lg border border-transparent hover:border-gray-300 dark:hover:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#2c313c] transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
         >
-          <RotateCcw className='w-4 h-4' />
+          <RotateCcw className="w-4 h-4" />
           <span>Καθαρισμός</span>
         </button>
       </div>
 
       <div
-        className='bg-white dark:bg-[#282c34] rounded-2xl shadow-sm border border-gray-200 dark:border-[#181a1f] p-8 space-y-6'
+        className="bg-white dark:bg-[#282c34] rounded-2xl shadow-sm border border-gray-200 dark:border-[#181a1f] p-8 space-y-6"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
@@ -140,19 +148,19 @@ export default function Calculator() {
           }
         }}
       >
-        <div className='space-y-5'>
+        <div className="space-y-5">
           {/* Product */}
           <div>
-            <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2'>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Προϊόν
             </label>
             <select
               ref={productSelectRef}
               value={selectedProduct}
               onChange={handleProductChange}
-              className='w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors'
+              className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors"
             >
-              <option value='' disabled hidden>
+              <option value="" disabled hidden>
                 Επιλέξτε προϊόν
               </option>
               {products.map((p) => (
@@ -165,16 +173,16 @@ export default function Calculator() {
 
           {/* Finish */}
           {availableFinishes.length > 0 && (
-            <div className='animate-in fade-in slide-in-from-top-2 duration-300'>
-              <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2'>
+            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Φινίρισμα
               </label>
               <select
                 value={selectedFinish}
                 onChange={(e) => setSelectedFinish(e.target.value)}
-                className='w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors'
+                className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors"
               >
-                <option value='' disabled hidden>
+                <option value="" disabled hidden>
                   Επιλέξτε φινίρισμα
                 </option>
                 {availableFinishes.map((f) => (
@@ -186,61 +194,79 @@ export default function Calculator() {
             </div>
           )}
 
-          {/* Source */}
-          <div>
-            <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2'>
-              Πηγή Υλικού (Μάρμαρο/Υλικό)
-            </label>
-            <select
-              value={selectedSource}
-              onChange={(e) => setSelectedSource(e.target.value)}
-              className='w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors'
-            >
-              <option value='' disabled hidden>
-                Επιλέξτε πηγή
-              </option>
-              {sources.map((s) => (
-                <option key={s._id} value={s.source}>
-                  {s.source}
-                  {s.region ? ` (${s.region})` : ""}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Φάρδος — μόνο για Καπάκι */}
+          {selectedProduct === "Καπάκι" && (
+            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Φάρδος (cm)
+              </label>
+              <input
+                type="number"
+                value={widthCm}
+                onChange={(e) => setWidthCm(e.target.value)}
+                placeholder="π.χ. 25"
+                className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] placeholder-gray-400 transition-colors"
+              />
+            </div>
+          )}
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+          {/* Source */}
+          {!isTradeGood && (
+            <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Πηγή Υλικού (Μάρμαρο/Υλικό)
+              </label>
+              <select
+                value={selectedSource}
+                onChange={(e) => setSelectedSource(e.target.value)}
+                className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] transition-colors"
+              >
+                <option value="" disabled hidden>
+                  Επιλέξτε πηγή
+                </option>
+                {sources.map((s) => (
+                  <option key={s._id} value={s.source}>
+                    {s.source}
+                    {s.region ? ` (${s.region})` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Quantity */}
             <div>
-              <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2'>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Ποσότητα (m²)
               </label>
               <input
                 ref={quantityRef}
-                type='number'
+                type="number"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                placeholder='π.χ. 50'
-                className='w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] placeholder-gray-400 transition-colors'
+                placeholder="π.χ. 50"
+                className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] placeholder-gray-400 transition-colors"
               />
             </div>
 
             {/* Packaging */}
             <div>
-              <label className='block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2'>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Συσκευασία
               </label>
-              <div className='flex gap-3 h-13 items-center px-4 border-2 border-gray-200 dark:border-[#181a1f] rounded-xl bg-gray-50 dark:bg-[#21252b]'>
+              <div className="flex gap-3 h-13 items-center px-4 border-2 border-gray-200 dark:border-[#181a1f] rounded-xl bg-gray-50 dark:bg-[#21252b]">
                 {["χωρίς", "παλέτα", "κιβώτιο"].map((opt) => (
                   <label
                     key={opt}
-                    className='flex-1 flex items-center justify-center gap-2 cursor-pointer group'
+                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer group"
                   >
                     <input
-                      type='radio'
+                      type="radio"
                       value={opt}
                       checked={packaging === opt}
                       onChange={() => setPackaging(opt)}
-                      className='w-4 h-4 text-gray-900 bg-gray-100 border-gray-300 focus:ring-gray-900 dark:focus:ring-gray-100 dark:ring-offset-gray-800 cursor-pointer'
+                      className="w-4 h-4 text-gray-900 bg-gray-100 border-gray-300 focus:ring-gray-900 dark:focus:ring-gray-100 dark:ring-offset-gray-800 cursor-pointer"
                     />
                     <span
                       className={`text-sm capitalize transition-colors ${packaging === opt ? "font-medium text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200"}`}
@@ -255,123 +281,181 @@ export default function Calculator() {
         </div>
 
         {error && (
-          <div className='p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'>
-            <p className='text-red-600 dark:text-red-400 text-sm font-medium flex items-center gap-2'>
-              <span className='w-1.5 h-1.5 rounded-full bg-red-500'></span>
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+            <p className="text-red-600 dark:text-red-400 text-sm font-medium flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
               {error}
             </p>
           </div>
         )}
 
-        <div className='pt-4'>
+        <div className="pt-4">
           <button
             onClick={handleCalculate}
             disabled={loading}
-            className='w-full flex items-center justify-center space-x-2 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 font-semibold py-4 rounded-xl transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-white dark:focus:ring-offset-[#282c34] shadow-sm tracking-wide'
+            className="w-full flex items-center justify-center space-x-2 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 font-semibold py-4 rounded-xl transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 dark:focus:ring-white dark:focus:ring-offset-[#282c34] shadow-sm tracking-wide"
           >
             <span>{loading ? "Υπολογισμός..." : "Υπολογισμός Κόστους"}</span>
-            {!loading && <ArrowRight className='w-5 h-5' />}
+            {!loading && <ArrowRight className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
       {/* Result */}
       {result && result.breakdown && (
-        <div className='mt-8 bg-white dark:bg-[#282c34] border border-gray-200 dark:border-[#181a1f] rounded-2xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500'>
-          <div className='bg-gray-50 dark:bg-[#21252b] border-b border-gray-200 dark:border-[#181a1f] px-8 py-5 flex justify-between items-center'>
-            <div className='flex items-baseline gap-2'>
-              <h2 className='text-lg font-bold text-gray-900 dark:text-white tracking-tight'>
+        <div className="mt-8 bg-white dark:bg-[#282c34] border border-gray-200 dark:border-[#181a1f] rounded-2xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-gray-50 dark:bg-[#21252b] border-b border-gray-200 dark:border-[#181a1f] px-8 py-5 flex justify-between items-center">
+            <div className="flex items-baseline gap-2">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                 Ανάλυση Κόστους
               </h2>
-              <span className='text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest'>
+              <span className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                 €/m²
               </span>
             </div>
           </div>
 
-          <div className='p-8 space-y-4'>
-            <p className='text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1'>
+          <div className="p-8 space-y-4">
+            {/* Traded good badge */}
+            {result.isTradeGood && (
+              <div className="mb-2 px-3 py-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                  Εμπορικό Είδος — Τιμή Πώλησης χωρίς παραγωγή
+                </p>
+              </div>
+            )}
+
+            <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
               Ανάλυση ανά m²
             </p>
-            <div className='space-y-3 text-sm text-gray-600 dark:text-gray-400'>
-              <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
-                <span>Κόστος Πρώτης Ύλης</span>
-                <span className='font-medium text-gray-900 dark:text-gray-200'>
-                  <span className= 'text-gray-400'>€{fmt(result.breakdown.baseCostPerM2)}/m²</span>
-                </span>
-              </div>
-              <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
-                <span>Κόστος Επεξεργασίας</span>
-                <span className='font-medium text-gray-900 dark:text-gray-200'>
-                  <span className='text-gray-400'>€{fmt(result.breakdown.processingCostPerM2)}/m²</span>
-                </span>
-              </div>
-              {result.breakdown.packagingPerM2 > 0 && (
-                <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
-                  <span>Συσκευασία</span>
-                  <span className='font-medium text-gray-900 dark:text-gray-200'>
-                    <span className='text-gray-400'>€{fmt(result.breakdown.packagingPerM2)}/m²</span>
+
+            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+              {/* Raw material — hide for traded goods */}
+              {!result.isTradeGood && (
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span>Κόστος Πρώτης Ύλης</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.baseCostPerM2)}/m²
+                    </span>
                   </span>
                 </div>
               )}
 
-              <div className='flex justify-between items-center p-2 pl-3 rounded-lg border-t border-l-2 border-gray-200 dark:border-gray-600 pt-3 mt-2'>
-                <span className='font-semibold text-gray-900 dark:text-white'>
-                  Σύνολο Υλικών ανά m²
+              {/* Processing — hide for traded goods, show selling price instead */}
+              {result.isTradeGood ? (
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span>Τιμή Πώλησης</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.sellingPricePerM2)}/m²
+                    </span>
+                  </span>
+                </div>
+              ) : (
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span>Κόστος Επεξεργασίας</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.processingCostPerM2)}/m²
+                    </span>
+                  </span>
+                </div>
+              )}
+
+              {/* Packaging — only if applicable */}
+              {result.breakdown.packagingPerM2 > 0 && (
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span>Συσκευασία</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.packagingPerM2)}/m²
+                    </span>
+                  </span>
+                </div>
+              )}
+
+              {/* Subtotal per m² */}
+              <div className="flex justify-between items-center p-2 pl-3 rounded-lg border-t border-l-2 border-gray-200 dark:border-gray-600 pt-3 mt-2">
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  Σύνολο ανά m²
                 </span>
-                <span className='font-semibold text-gray-900 dark:text-white'>
-                  <span className='text-gray-400'>€{fmt(result.breakdown.totalPerM2NoTax)}</span>
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  <span className="text-gray-400">
+                    €{fmt(result.breakdown.totalPerM2NoTax)}
+                  </span>
                 </span>
               </div>
             </div>
 
-            <div className='h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4'></div>
+            <div className="h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4"></div>
 
-            <p className='text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1'>
+            <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
               Σύνολο
             </p>
-            <div className='space-y-3 text-sm text-gray-600 dark:text-gray-400'>
-              <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
+
+            <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                 <span>Ποσότητα</span>
-                <span className='font-medium text-gray-900 dark:text-gray-200'>
+                <span className="font-medium text-gray-900 dark:text-gray-200">
                   {result.breakdown.quantity} m²
                 </span>
               </div>
+
               {result.breakdown.packagingFlatFee > 0 && (
-                <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                   <span>Πάγιο Κιβωτίου</span>
-                  <span className='font-medium text-gray-900 dark:text-gray-200'>
-                     <span className='text-gray-400'>€{fmt(result.breakdown.packagingFlatFee)}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.packagingFlatFee)}
+                    </span>
                   </span>
                 </div>
               )}
 
-              <div className='h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4'></div>
+              {result.breakdown.pressingFlatFee > 0 && (
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span>Πάγιο Πρέσσας</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.breakdown.pressingFlatFee)}
+                    </span>
+                  </span>
+                </div>
+              )}
 
-              {/*VAT */}
-              <div className='space-y-2'>
-                <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
-                  <span className='text-sm text-gray-500 dark:text-gray-400'>
+              <div className="h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4"></div>
+
+              {/* VAT */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     Σύνολο χωρίς ΦΠΑ
                   </span>
-                  <span className='font-medium text-gray-900 dark:text-gray-200'>
-                    <span className='text-gray-400'>€{fmt(result.grandTotalNoTax)}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-200">
+                    <span className="text-gray-400">
+                      €{fmt(result.grandTotalNoTax)}
+                    </span>
                   </span>
                 </div>
-                <div className='flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors'>
-                  <span className='text-sm text-amber-600 dark:text-amber-400'>
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
+                  <span className="text-sm text-amber-600 dark:text-amber-400">
                     ΦΠΑ 24%
                   </span>
-                  <span className='font-medium text-amber-600 dark:text-amber-400'>
-                     <span className='text-gray-400'>€{fmt(result.vatAmount)}</span>
+                  <span className="font-medium text-amber-600 dark:text-amber-400">
+                    <span className="text-gray-400">
+                      €{fmt(result.vatAmount)}
+                    </span>
                   </span>
                 </div>
-                <div className='flex justify-between items-center pt-2 border-t border-gray-200 dark:border-[#2c313c]'>
-                  <span className='text-base font-semibold text-gray-900 dark:text-white'>
+                <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-[#2c313c]">
+                  <span className="text-base font-semibold text-gray-900 dark:text-white">
                     Σύνολο με ΦΠΑ
                   </span>
-                  <div className='text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>
-                    <span className='text-gray-400'>€{fmt(result.grandTotalWithTax)}</span>
+                  <div className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <span className="text-gray-400">
+                      €{fmt(result.grandTotalWithTax)}
+                    </span>
                   </div>
                 </div>
               </div>

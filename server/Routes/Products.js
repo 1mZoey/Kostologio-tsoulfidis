@@ -12,7 +12,10 @@ router.get("/", async (req, res) => {
       .json({ error: "Η βάση δεδομένων δεν είναι συνδεδεμένη." });
   try {
     const db = mongoose.connection.db;
-    const products = await db.collection("products").find({}).toArray();
+    const products = await db
+      .collection("products")
+      .find({ active: { $ne: false } })
+      .toArray();
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });

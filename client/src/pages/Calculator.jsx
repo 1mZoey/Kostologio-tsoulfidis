@@ -17,7 +17,7 @@ export default function Calculator() {
   const [selectedFinish, setSelectedFinish] = useState("");
   const [selectedSource, setSelectedSource] = useState("");
   const [quantity, setQuantity] = useState("");
-  const [packaging, setPackaging] = useState("χωρίς");
+  const [packaging, setPackaging] = useState("παλέτα");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -80,7 +80,7 @@ export default function Calculator() {
     setSelectedFinish("");
     setSelectedSource("");
     setQuantity("");
-    setPackaging("χωρίς");
+    setPackaging("παλέτα");
     setAvailableFinishes([]);
     setResult(null);
     setError("");
@@ -256,7 +256,7 @@ export default function Calculator() {
                 Συσκευασία
               </label>
               <div className="flex gap-3 h-13 items-center px-4 border-2 border-gray-200 dark:border-[#181a1f] rounded-xl bg-gray-50 dark:bg-[#21252b]">
-                {["χωρίς", "παλέτα", "κιβώτιο"].map((opt) => (
+                {["παλέτα", "κιβώτιο"].map((opt) => (
                   <label
                     key={opt}
                     className="flex-1 flex items-center justify-center gap-2 cursor-pointer group"

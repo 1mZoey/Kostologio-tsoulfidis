@@ -68,6 +68,7 @@ router.post("/calculate", async (req, res) => {
           packagingPerM2: 0,
           packagingFlatFee: 0,
           pressingFlatFee: 0,
+          
         },
         grandTotalNoTax: parseFloat(grandTotalNoTax.toFixed(2)),
         vatAmount: parseFloat(vatAmount.toFixed(2)),

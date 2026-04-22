@@ -19,14 +19,14 @@ function Products() {
   }, [])
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto animate-in fade-in duration-300">
+    <div className="px-4 py-6 md:px-8 md:py-8 space-y-6 max-w-7xl mx-auto animate-in fade-in duration-300">
       <div className="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-[#181a1f]">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Προϊόντα</h1>
         <span className="px-3 py-1 bg-gray-100 dark:bg-[#282c34] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-[#181a1f] rounded-full text-xs font-semibold uppercase tracking-wider">
           {products.length} αντικείμενα
         </span>
       </div>
-      <div className="bg-white dark:bg-[#282c34] rounded-2xl border border-gray-200 dark:border-[#181a1f] shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-[#282c34] rounded-2xl border border-gray-200 dark:border-[#181a1f] shadow-sm overflow-x-auto">
         {loading ? (
           <div className="p-12 flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
@@ -35,7 +35,7 @@ function Products() {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-[#21252b] border-b border-gray-200 dark:border-[#181a1f]">
               <tr>
-                <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Όνομα</th>
+                <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[220px]">Όνομα</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Κατηγορία</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Μονάδα</th>
                 <th className="text-left px-8 py-5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Πάχος</th>
@@ -48,11 +48,13 @@ function Products() {
               ) : (
                 products.map((p, i) => (
                   <tr key={p._id || i} className="hover:bg-gray-50/50 dark:hover:bg-[#2c313c]/50 transition-colors">
-                    <td className="px-8 py-5 font-medium text-gray-900 dark:text-gray-100 flex items-center gap-4">
+                    <td className="px-8 py-5 font-medium text-gray-900 dark:text-gray-100">
+                      <div className="flex items-center gap-4">
                       {p.name}
+                      </div>
                     </td>
                     <td className="px-8 py-5">
-                      <span className="px-2.5 py-1 bg-gray-100 dark:bg-[#21252b] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#181a1f] rounded-md text-xs font-medium">
+                      <span className="px-2.5 py-1 bg-gray-100 dark:bg-[#21252b] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#181a1f] rounded-md text-xs font-medium whitespace-nowrap">
                         {p.category || '—'}
                       </span>
                     </td>

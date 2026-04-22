@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Calculator from './pages/Calculator'
 import Products from './pages/Products'
 import Materials from './pages/Materials'
+import Machines from './pages/Machines'
 import History from './pages/History'
 import Admin from './pages/Admin';
 
@@ -27,6 +28,7 @@ function AppContent() {
               <Route path="/calculator" element={<Calculator />} />
               <Route path="/products" element={<Products />} />
               <Route path="/materials" element={<Materials />} />
+              <Route path="/machines" element={<Machines />} />
               <Route path="/history" element={<History />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>

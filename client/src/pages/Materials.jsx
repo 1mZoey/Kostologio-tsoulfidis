@@ -3,10 +3,12 @@ import { getCostItems } from '../services/api'
 import { Calculator as CalculatorIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
+
 function Materials() {
   const [materials, setMaterials] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+
 
   const handleAddToCalculator = (material) => {
     navigate('/calculator', { 
@@ -19,11 +21,37 @@ function Materials() {
     })
   }
 
+
   useEffect(() => {
     getCostItems()
       .then(res => { setMaterials(res.data); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
+
+
+  const formatPrice = (m) => {
+    if (m.baseCostPerM2) return `€${m.baseCostPerM2}/m²`
+    if (m.pricePerM3)    return `€${m.pricePerM3}/m³`
+    if (m.pricePerLoad)  return `€${m.pricePerLoad}/φορτίο`
+    if (m.price)         return `€${m.price}`
+    if (m.costPerUnit)   return `€${m.costPerUnit}`
+    return '—'
+  }
+
+  const formatCategory = (m) => {
+    if (m.loadType === 'per_load') return 'Ανά Φορτίο'
+    if (m.loadType === 'per_m3')   return 'Ανά m³'
+    if (m.category)                return m.category
+    return '—'
+  }
+
+  const formatUnitType = (m) => {
+    if (m.loadType === 'per_load') return 'Φορτίο'
+    if (m.loadType === 'per_m3')   return 'm³'
+    if (m.unitType)                return m.unitType
+    return '—'
+  }
+
 
   return (
     <div className="p-8 space-y-6 max-w-7xl mx-auto animate-in fade-in duration-300">
@@ -59,13 +87,13 @@ function Materials() {
                       {m.name || m.source || '—'}
                     </td>
                     <td className="px-8 py-5">
-                      <span className="px-2.5 py-1 bg-gray-100 dark:bg-[#21252b] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#181a1f] rounded-md text-xs font-medium">
-                        {m.category || '—'}
+                      <span className="px-2.5 py-1 bg-gray-100 dark:bg-[#21252b] text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-[#181a1f] rounded-md text-xs font-medium whitespace-nowrap">
+                        {formatCategory(m)}
                       </span>
                     </td>
-                    <td className="px-8 py-5 text-gray-500 dark:text-gray-400 text-sm">{m.unitType || '—'}</td>
+                    <td className="px-8 py-5 text-gray-500 dark:text-gray-400 text-sm">{formatUnitType(m)}</td>
                     <td className="px-8 py-5 font-semibold text-gray-900 dark:text-gray-100">
-                      €{m.price || m.costPerUnit || m.baseCostPerM2 || '—'}
+                      {formatPrice(m)}
                     </td>
                     <td className="px-8 py-5">
                       <button 
@@ -86,5 +114,6 @@ function Materials() {
     </div>
   )
 }
+
 
 export default Materials;

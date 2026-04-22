@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings as SettingsIcon,
+  Wrench,
 } from "lucide-react";
 
 const menuItems = [
@@ -15,6 +16,7 @@ const menuItems = [
   { name: "Υπολογιστής Κόστους", icon: CalculatorIcon, path: "/calculator" },
   { name: "Προϊόντα", icon: Layers, path: "/products" },
   { name: "Υλικά", icon: Mountain, path: "/materials" },
+  { name: "Μηχανήματα", icon: Wrench, path: "/machines" },
   { name: "Ιστορικό", icon: HistoryIcon, path: "/history" },
   { name: "Διαχείριση", icon: SettingsIcon, path: "/admin"}
 ];

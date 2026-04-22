@@ -5,6 +5,8 @@ import {
   Calculator as CalculatorIcon,
   ArrowRight,
   RotateCcw,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 
 export default function Calculator() {
@@ -18,10 +20,12 @@ export default function Calculator() {
   const [selectedSource, setSelectedSource] = useState("");
   const [quantity, setQuantity] = useState("");
   const [packaging, setPackaging] = useState("παλέτα");
+  const [profitMargin, setProfitMargin] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [widthCm, setWidthCm] = useState("");
+  const [showMachineBreakdown, setShowMachineBreakdown] = useState(false);
 
   const quantityRef = useRef(null);
   const productSelectRef = useRef(null);
@@ -32,6 +36,25 @@ export default function Calculator() {
     selectedProductData?.tradeGood === "True";
 
   const fmt = (val) => (val != null ? Number(val).toFixed(2) : "--");
+
+  // Derived profit margin calculations (pure frontend, no backend call)
+  const marginPct = parseFloat(profitMargin) || 0;
+  const hasMargin = marginPct > 0 && result;
+
+  const costNoTax = result ? result.grandTotalNoTax : 0;
+  const profitAmount = hasMargin ? costNoTax * (marginPct / 100) : 0;
+  const sellingPriceNoTax = costNoTax + profitAmount;
+  const vatAmount = hasMargin ? sellingPriceNoTax * 0.24 : result?.vatAmount ?? 0;
+  const grandTotalWithTax = hasMargin
+    ? sellingPriceNoTax * 1.24
+    : result?.grandTotalWithTax ?? 0;
+
+  const costPerM2 = result ? result.breakdown.totalPerM2NoTax : 0;
+  const profitPerM2 = hasMargin ? costPerM2 * (marginPct / 100) : 0;
+  const sellingPerM2 = costPerM2 + profitPerM2;
+
+  const hasMachineBreakdown =
+    result?.machineBreakdown && result.machineBreakdown.length > 0;
 
   useEffect(() => {
     Promise.all([axios.get("/api/products"), axios.get("/api/sources")]).then(
@@ -72,6 +95,7 @@ export default function Calculator() {
     setSelectedProduct(name);
     setSelectedFinish("");
     setResult(null);
+    setShowMachineBreakdown(false);
     fetchAvailableFinishes(name);
   };
 
@@ -81,10 +105,12 @@ export default function Calculator() {
     setSelectedSource("");
     setQuantity("");
     setPackaging("παλέτα");
+    setProfitMargin("");
     setAvailableFinishes([]);
     setResult(null);
     setError("");
     setWidthCm("");
+    setShowMachineBreakdown(false);
     if (productSelectRef.current) productSelectRef.current.focus();
   };
 
@@ -102,6 +128,7 @@ export default function Calculator() {
     }
     setError("");
     setLoading(true);
+    setShowMachineBreakdown(false);
     try {
       const { data } = await axios.post("/api/calculator/calculate", {
         productName: selectedProduct,
@@ -278,6 +305,30 @@ export default function Calculator() {
               </div>
             </div>
           </div>
+
+          {/* Profit Margin */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Περιθώριο Κέρδους{" "}
+              <span className="text-gray-400 dark:text-gray-500 font-normal">
+                (προαιρετικό)
+              </span>
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={profitMargin}
+                onChange={(e) => setProfitMargin(e.target.value)}
+                placeholder="π.χ. 30"
+                className="w-full border-2 border-gray-200 dark:border-[#181a1f] bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-white rounded-xl px-4 py-3 pr-10 focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 focus:bg-white dark:focus:bg-[#282c34] placeholder-gray-400 transition-colors"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-medium pointer-events-none">
+                %
+              </span>
+            </div>
+          </div>
         </div>
 
         {error && (
@@ -330,7 +381,7 @@ export default function Calculator() {
             </p>
 
             <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-              {/* Raw material — hide for traded goods */}
+              {/* Raw material */}
               {!result.isTradeGood && (
                 <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                   <span>Κόστος Πρώτης Ύλης</span>
@@ -342,7 +393,7 @@ export default function Calculator() {
                 </div>
               )}
 
-              {/* Processing — hide for traded goods, show selling price instead */}
+              {/* Processing / Selling price */}
               {result.isTradeGood ? (
                 <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                   <span>Τιμή Πώλησης</span>
@@ -353,17 +404,103 @@ export default function Calculator() {
                   </span>
                 </div>
               ) : (
-                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
-                  <span>Κόστος Επεξεργασίας</span>
-                  <span className="font-medium text-gray-900 dark:text-gray-200">
-                    <span className="text-gray-400">
-                      €{fmt(result.breakdown.processingCostPerM2)}/m²
+                <div>
+                  {/* Clickable processing cost row */}
+                  <div
+                    className={`flex justify-between items-center p-2 rounded-lg transition-colors ${hasMachineBreakdown ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-[#2c313c]" : "hover:bg-gray-50 dark:hover:bg-[#2c313c]/50"}`}
+                    onClick={() =>
+                      hasMachineBreakdown &&
+                      setShowMachineBreakdown((v) => !v)
+                    }
+                  >
+                    <span className="flex items-center gap-1.5">
+                      {hasMachineBreakdown &&
+                        (showMachineBreakdown ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+                        ))}
+                      Κόστος Επεξεργασίας
+                      {hasMachineBreakdown && (
+                        <span className="text-xs text-gray-400 dark:text-gray-500">
+                          (ανά μηχάνημα)
+                        </span>
+                      )}
                     </span>
-                  </span>
+                    <span className="font-medium text-gray-900 dark:text-gray-200">
+                      <span className="text-gray-400">
+                        €{fmt(result.breakdown.processingCostPerM2)}/m²
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Machine breakdown table */}
+                  {showMachineBreakdown && hasMachineBreakdown && (
+                    <div className="mt-2 ml-5 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="rounded-xl border border-gray-200 dark:border-[#2c313c] overflow-hidden">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-gray-50 dark:bg-[#21252b] text-gray-500 dark:text-gray-400">
+                              <th className="text-left px-3 py-2 font-semibold">
+                                Μηχάνημα
+                              </th>
+                              <th className="text-right px-3 py-2 font-semibold">
+                                Εργατικά/m²
+                              </th>
+                              <th className="text-right px-3 py-2 font-semibold">
+                                Overhead/m²
+                              </th>
+                              <th className="text-right px-3 py-2 font-semibold">
+                                Επεξ./m²
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100 dark:divide-[#2c313c]">
+                            {result.machineBreakdown.map((m) => (
+                              <tr
+                                key={m.machine}
+                                className="hover:bg-gray-50 dark:hover:bg-[#2c313c]/40 transition-colors"
+                              >
+                                <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">
+                                  {m.machine}
+                                </td>
+                                {m.perCut ? (
+                                  <td
+                                    colSpan={3}
+                                    className="px-3 py-2 text-right text-amber-600 dark:text-amber-400 font-medium"
+                                  >
+                                    €{fmt(m.costPerCut)}/κοψιά
+                                  </td>
+                                ) : (
+                                  <>
+                                    <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
+                                      {m.labourPerM2 != null
+                                        ? `€${fmt(m.labourPerM2)}`
+                                        : "--"}
+                                    </td>
+                                    <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
+                                      {m.overheadPerM2 != null
+                                        ? `€${fmt(m.overheadPerM2)}`
+                                        : "--"}
+                                    </td>
+                                    <td className="px-3 py-2 text-right font-medium text-gray-900 dark:text-gray-200">
+                                      {m.processingCostPerM2 != null
+                                        ? `€${fmt(m.processingCostPerM2)}`
+                                        : "--"}
+                                    </td>
+                                  </>
+                                )}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Packaging — only if applicable */}
+              {/* Packaging per m² */}
               {result.breakdown.packagingPerM2 > 0 && (
                 <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                   <span>Συσκευασία</span>
@@ -375,17 +512,37 @@ export default function Calculator() {
                 </div>
               )}
 
-              {/* Subtotal per m² */}
+              {/* Subtotal per m² (cost) */}
               <div className="flex justify-between items-center p-2 pl-3 rounded-lg border-t border-l-2 border-gray-200 dark:border-gray-600 pt-3 mt-2">
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  Σύνολο ανά m²
+                  Κόστος ανά m²
                 </span>
                 <span className="font-semibold text-gray-900 dark:text-white">
-                  <span className="text-gray-400">
-                    €{fmt(result.breakdown.totalPerM2NoTax)}
-                  </span>
+                  <span className="text-gray-400">€{fmt(costPerM2)}</span>
                 </span>
               </div>
+
+              {/* Profit per m² — only if margin set */}
+              {hasMargin && (
+                <>
+                  <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors animate-in fade-in duration-300">
+                    <span className="text-green-600 dark:text-green-400">
+                      Κέρδος ({marginPct}%)
+                    </span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      +€{fmt(profitPerM2)}/m²
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 pl-3 rounded-lg border-t border-l-2 border-green-300 dark:border-green-700 pt-3 mt-2 animate-in fade-in duration-300">
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      Τιμή Πώλησης ανά m²
+                    </span>
+                    <span className="font-semibold text-green-600 dark:text-green-400">
+                      €{fmt(sellingPerM2)}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4"></div>
@@ -424,9 +581,21 @@ export default function Calculator() {
                 </div>
               )}
 
+              {/* Profit total — only if margin set */}
+              {hasMargin && (
+                <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800/50 animate-in fade-in duration-300">
+                  <span className="text-green-700 dark:text-green-400 font-medium">
+                    Κέρδος ({marginPct}%)
+                  </span>
+                  <span className="font-semibold text-green-700 dark:text-green-400">
+                    +€{fmt(profitAmount)}
+                  </span>
+                </div>
+              )}
+
               <div className="h-px w-full bg-gray-200 dark:bg-[#2c313c] my-4"></div>
 
-              {/* VAT */}
+              {/* VAT & totals */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#2c313c]/50 transition-colors">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -434,7 +603,7 @@ export default function Calculator() {
                   </span>
                   <span className="font-medium text-gray-900 dark:text-gray-200">
                     <span className="text-gray-400">
-                      €{fmt(result.grandTotalNoTax)}
+                      €{fmt(sellingPriceNoTax)}
                     </span>
                   </span>
                 </div>
@@ -443,19 +612,17 @@ export default function Calculator() {
                     ΦΠΑ 24%
                   </span>
                   <span className="font-medium text-amber-600 dark:text-amber-400">
-                    <span className="text-gray-400">
-                      €{fmt(result.vatAmount)}
-                    </span>
+                    <span className="text-gray-400">€{fmt(vatAmount)}</span>
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-[#2c313c]">
                   <span className="text-base font-semibold text-gray-900 dark:text-white">
-                    Σύνολο με ΦΠΑ
+                    {hasMargin ? "Τιμή Πώλησης με ΦΠΑ" : "Σύνολο με ΦΠΑ"}
                   </span>
-                  <div className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    <span className="text-gray-400">
-                      €{fmt(result.grandTotalWithTax)}
-                    </span>
+                  <div
+                    className={`text-2xl font-bold tracking-tight ${hasMargin ? "text-green-600 dark:text-green-400" : "text-gray-900 dark:text-white"}`}
+                  >
+                    €{fmt(grandTotalWithTax)}
                   </div>
                 </div>
               </div>

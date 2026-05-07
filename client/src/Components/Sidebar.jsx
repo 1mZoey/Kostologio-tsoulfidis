@@ -26,7 +26,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
 
   return (
     <div
-      className={`${isCollapsed ? "w-20" : "w-64"} bg-gray-50 dark:bg-[#21252b] border-r border-gray-200 dark:border-[#181a1f] flex flex-col h-screen transition-all duration-300 z-30 overflow-hidden`}
+      className={`${isCollapsed ? "w-20" : "w-64"} bg-gray-50 dark:bg-[#21252b] border-r border-gray-200 dark:border-[#181a1f] flex flex-col h-screen ease-in-out duration-300 z-30 overflow-hidden`}
     >
       <div
         className={`px-6 py-3 flex items-center ${isCollapsed ? "justify-center" : "justify-between"} border-b border-transparent shrink-0`}

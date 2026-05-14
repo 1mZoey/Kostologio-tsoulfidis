@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Calculator as CalculatorIcon,
   ArrowRight,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 export default function Calculator() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [products, setProducts] = useState([]);
   const [sources, setSources] = useState([]);
@@ -62,6 +63,8 @@ export default function Calculator() {
     result?.machineBreakdown && result.machineBreakdown.length > 0;
   const editMode = location.state?.editMode === true;
   const editId = location.state?.historyItem?._id;
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveChoice, setSaveChoice] = useState(null);
 
   useEffect(() => {
     Promise.all([axios.get("/api/products"), axios.get("/api/sources")]).then(
@@ -171,29 +174,44 @@ export default function Calculator() {
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveClick = () => {
+    if (editMode && editId) {
+      setSaveChoice(null);
+      setShowSaveModal(true);
+    } else {
+      executeSave(false);
+    }
+  };
+
+  const executeSave = async (replace) => {
     if (!result) return;
+    setShowSaveModal(false);
     setSaving(true);
+    const payload = {
+      name: quoteName.trim(),
+      inputs: {
+        productName: selectedProduct,
+        finish: selectedFinish,
+        source: selectedSource,
+        quantity: parseFloat(quantity),
+        packaging,
+        widthCm: widthCm ? parseFloat(widthCm) : undefined,
+        profitMargin: parseFloat(profitMargin) || 0,
+      },
+      result: {
+        ...result,
+        grandTotalWithTax,
+        grandTotalNoTax: costNoTax,
+        sellingPriceNoTax,
+        vatAmount,
+      },
+    };
     try {
-      await axios.post("/api/history", {
-        name: quoteName.trim(),
-        inputs: {
-          productName: selectedProduct,
-          finish: selectedFinish,
-          source: selectedSource,
-          quantity: parseFloat(quantity),
-          packaging,
-          widthCm: widthCm ? parseFloat(widthCm) : undefined,
-          profitMargin: parseFloat(profitMargin) || 0,
-        },
-        result: {
-          ...result,
-          grandTotalWithTax,
-          grandTotalNoTax: costNoTax,
-          sellingPriceNoTax,
-          vatAmount,
-        },
-      });
+      if (replace) {
+        await axios.put(`/api/history/${editId}`, payload);
+      } else {
+        await axios.post("/api/history", payload);
+      }
       setSaved(true);
     } catch (err) {
       console.error("Save error:", err);
@@ -671,9 +689,18 @@ export default function Calculator() {
           {/* ── Save to History Panel ── */}
           <div className='border-t border-gray-200 dark:border-[#181a1f] px-8 py-5 bg-gray-50 dark:bg-[#21252b]'>
             {saved ? (
-              <div className='flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium animate-in fade-in duration-300'>
-                <Check className='w-4 h-4' />
-                Αποθηκεύτηκε στο ιστορικό!
+              <div className='flex items-center justify-between animate-in fade-in duration-300'>
+                <div className='flex items-center gap-2 text-green-600 dark:text-green-400 text-sm font-medium'>
+                  <Check className='w-4 h-4' />
+                  Αποθηκεύτηκε στο ιστορικό!
+                </div>
+                <button
+                  onClick={() => navigate("/history")}
+                  className='inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#181a1f] hover:border-gray-400 dark:hover:border-gray-500 rounded-lg hover:bg-gray-100 dark:hover:bg-[#2c313c] transition-all active:scale-95'
+                >
+                  Ιστορικό
+                  <ArrowRight className='w-3.5 h-3.5' />
+                </button>
               </div>
             ) : (
               <div className='space-y-3'>
@@ -689,7 +716,7 @@ export default function Calculator() {
                     className='flex-1 border-2 border-gray-200 dark:border-[#181a1f] bg-white dark:bg-[#282c34] text-gray-900 dark:text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-gray-800 dark:focus:border-gray-400 transition-colors placeholder-gray-400'
                   />
                   <button
-                    onClick={handleSave}
+                    onClick={handleSaveClick}
                     disabled={saving}
                     className='inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 text-sm font-semibold rounded-xl transition-all active:scale-95 disabled:opacity-50 shadow-sm whitespace-nowrap'
                   >
@@ -699,6 +726,74 @@ export default function Calculator() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {showSaveModal && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200'>
+          <div className='bg-white dark:bg-[#282c34] rounded-2xl border border-gray-200 dark:border-[#181a1f] shadow-xl w-full max-w-sm p-6 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-300'>
+            <div className='space-y-1'>
+              <h3 className='text-base font-bold text-gray-900 dark:text-white'>
+                Αποθήκευση Υπολογισμού
+              </h3>
+              <p className='text-sm text-gray-500 dark:text-gray-400'>
+                Αυτός ο υπολογισμός προέρχεται από επεξεργασία. Τι θέλετε να
+                κάνετε;
+              </p>
+            </div>
+
+            <div className='space-y-2'>
+              {[
+                {
+                  value: true,
+                  label: "Αντικατάσταση",
+                  sub: "Αντικαθιστά τον παλιό υπολογισμό",
+                },
+                {
+                  value: false,
+                  label: "Αποθήκευση ως Νέο",
+                  sub: "Κρατά και τους δύο υπολογισμούς",
+                },
+              ].map((opt) => (
+                <button
+                  key={String(opt.value)}
+                  onClick={() => setSaveChoice(opt.value)}
+                  className={`w-full flex flex-col items-start px-4 py-3 rounded-xl border-2 transition-all active:scale-95
+              ${
+                saveChoice === opt.value
+                  ? "border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+                  : "border-gray-200 dark:border-[#181a1f] text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-[#2c313c]"
+              }`}
+                >
+                  <span className='text-sm font-semibold'>{opt.label}</span>
+                  <span
+                    className={`text-xs mt-0.5 ${saveChoice === opt.value ? "opacity-70" : "text-gray-400 dark:text-gray-500"}`}
+                  >
+                    {opt.sub}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <div className='flex gap-2 pt-1'>
+              <button
+                onClick={() => {
+                  setShowSaveModal(false);
+                  setSaveChoice(null);
+                }}
+                className='flex-1 px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-[#181a1f] text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#2c313c] transition-all active:scale-95'
+              >
+                Ακύρωση
+              </button>
+              <button
+                onClick={() => saveChoice !== null && executeSave(saveChoice)}
+                disabled={saveChoice === null}
+                className='flex-1 px-4 py-2.5 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed'
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
       )}

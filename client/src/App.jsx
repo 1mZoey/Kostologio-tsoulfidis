@@ -1,25 +1,31 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
 
-import Sidebar from './Components/Sidebar'
-import TopBar from './Components/TopBar'
+import Sidebar from './Components/Sidebar';
+import TopBar from './Components/TopBar';
 
-import Dashboard from './pages/Dashboard'
-import Calculator from './pages/Calculator'
-import Products from './pages/Products'
-import Materials from './pages/Materials'
-import Machines from './pages/Machines'
-import History from './pages/History'
+import Dashboard from './pages/Dashboard';
+import Calculator from './pages/Calculator';
+import Products from './pages/Products';
+import Materials from './pages/Materials';
+import Machines from './pages/Machines';
+import History from './pages/History';
 import Admin from './pages/Admin';
 
 function AppContent() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-[#21252b] overflow-hidden font-sans">
+    <div
+      className="h-screen bg-gray-50 dark:bg-[#21252b] overflow-hidden font-sans grid transition-all duration-300 ease-in-out"
+      style={{
+        gridTemplateColumns: isCollapsed ? '80px 1fr' : '256px 1fr',
+      }}
+    >
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <div className="flex-1 flex flex-col min-w-0">
+
+      <div className="min-w-0 flex flex-col overflow-hidden">
         <TopBar />
         <main className="flex-1 overflow-auto bg-gray-50 dark:bg-[#21252b] text-gray-900 dark:text-gray-100">
           <div className="h-full p-4 lg:p-6 max-w-7xl mx-auto">
@@ -36,7 +42,7 @@ function AppContent() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -44,7 +50,7 @@ function App() {
     <Router>
       <AppContent />
     </Router>
-  )
+  );
 }
 
 export default App;

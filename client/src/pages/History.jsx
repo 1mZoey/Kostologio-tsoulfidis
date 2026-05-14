@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { History as HistoryIcon, Pencil, Trash2 } from "lucide-react";
+import { History as HistoryIcon, Pencil, Trash2, Search } from "lucide-react";
 import axios from "axios";
 
 function History() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(new Set());
+  const [query, setQuery] = useState("");
+  const inputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +20,21 @@ function History() {
       })
       .catch(() => setLoading(false));
   }, []);
+
+  const normalize = (str) =>
+    str
+      ? str
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+      : "";
+
+  const filteredEntries = entries.filter(
+    (e) =>
+      normalize(e.name).includes(normalize(query)) ||
+      normalize(e.inputs?.productName).includes(normalize(query)) ||
+      normalize(e.inputs?.source).includes(normalize(query)),
+  );
 
   const toggleSelect = (id) => {
     setSelected((prev) => {
@@ -88,20 +105,49 @@ function History() {
         </div>
       </div>
 
+      {/* Search bar */}
+      <div className='relative group'>
+        <div className='absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none'>
+          <Search className='h-4 w-4 text-gray-400 group-focus-within:text-gray-800 dark:group-focus-within:text-gray-200 transition-colors' />
+        </div>
+        <input
+          ref={inputRef}
+          type='text'
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder='Αναζήτηση με όνομα, προϊόν ή πηγή...'
+          className='w-full pl-10 pr-4 py-2.5 text-sm bg-white dark:bg-[#282c34] border-2 border-gray-200 dark:border-[#181a1f] rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:border-gray-400 dark:focus:border-gray-500 transition-all'
+        />
+        {query && (
+          <button
+            onClick={() => setQuery("")}
+            className='absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors'
+          >
+            <span className='text-xs font-medium'>✕</span>
+          </button>
+        )}
+      </div>
+
       <div className='bg-white dark:bg-[#282c34] rounded-2xl border border-gray-200 dark:border-[#181a1f] shadow-sm overflow-x-auto'>
         {loading ? (
           <div className='p-12 flex justify-center'>
             <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white' />
           </div>
-        ) : entries.length === 0 ? (
+        ) : filteredEntries.length === 0 ? (
           <div className='p-12 text-center'>
-            <HistoryIcon className='w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4' />
+            <Search className='w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4' />
             <p className='text-gray-500 dark:text-gray-400 text-lg font-medium'>
-              Δεν υπάρχουν παλαιότεροι υπολογισμοί ακόμα.
+              Δεν βρέθηκαν αποτελέσματα για «{query}»
             </p>
             <p className='text-gray-400 dark:text-gray-500 text-sm mt-2'>
               Ξεκινήστε έναν νέο υπολογισμό από τη σελίδα Υπολογιστής Κόστους.
             </p>
+            <button
+              onClick={() => setQuery("")}
+              className="mt-3 text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline transition-colors"
+              >
+                 Καθαρισμός αναζήτησης
+              </button>
           </div>
         ) : (
           <table className='w-full'>
@@ -153,7 +199,7 @@ function History() {
               </tr>
             </thead>
             <tbody className='divide-y divide-gray-100 dark:divide-[#181a1f]'>
-              {entries.map((e, i) => {
+              {filteredEntries.map((e, i) => {
                 const id = e._id?.toString();
                 const isSelected = selected.has(id);
                 return (

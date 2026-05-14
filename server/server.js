@@ -9,7 +9,7 @@ import machineRoutes from "./routes/machine.js";
 import calculatorRouter from "./routes/calculator.js";
 import adminRouter from "./routes/admin.js";
 import sourcesRouter from "./routes/Sources.js";
-
+import materialsRouter from "./routes/materials.js";
 dotenv.config();
 
 const app = express();
@@ -24,7 +24,9 @@ app.use("/api/history", historyRoutes);
 app.use("/api/calculator", calculatorRouter);
 app.use("/api/machines", machineRoutes);
 app.use("/api/sources", sourcesRouter);
+app.use("/api/materials", materialsRouter);
 app.use("/api/admin", adminRouter);
+
 
 const PORT = process.env.PORT || 5000;
 

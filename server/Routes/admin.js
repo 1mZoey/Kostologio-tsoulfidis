@@ -10,10 +10,9 @@ router.get("/overhead", async (req, res) => {
       .status(503)
       .json({ error: "Η βάση δεδομένων δεν είναι συνδεδεμένη." });
   try {
-    const db = mongoose.connection.db;
-    const costs = await db
+    const costs = await mongoose.connection.db
       .collection("overhead_costs")
-      .find({ validTo: null })
+      .find({})
       .toArray();
     res.json(costs);
   } catch (err) {
@@ -22,38 +21,66 @@ router.get("/overhead", async (req, res) => {
 });
 
 // PUT update a cost type
-router.put("/overhead/:costType", async (req, res) => {
+router.put("/overhead/:type", async (req, res) => {
+  if (mongoose.connection.readyState !== 1)
+    return res
+      .status(503)
+      .json({ error: "Η βάση δεδομένων δεν είναι συνδεδεμένη." });
   try {
-    const db = mongoose.connection.db;
-    const { perMonth } = req.body;
-    const perDay = parseFloat((perMonth / 25).toFixed(4)); // 25 working days
-    const today = new Date();
-
-    // Close current active entry
-    await db
+    const { monthlyEUR } = req.body;
+    const dailyEUR = parseFloat((monthlyEUR / 25).toFixed(4));
+    await mongoose.connection.db
       .collection("overhead_costs")
       .updateOne(
-        { costType: req.params.costType, validTo: null },
-        { $set: { validTo: today } },
+        { type: req.params.type },
+        { $set: { monthlyEUR: parseFloat(monthlyEUR), dailyEUR } },
       );
+    res.json({ success: true, monthlyEUR, dailyEUR });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // Get old entry to carry over allocations
-    const old = await db.collection("overhead_costs").findOne({
-      costType: req.params.costType,
-      validTo: today,
+// POST — add new overhead entry
+router.post("/overhead", async (req, res) => {
+  try {
+    const { type, label, monthlyEUR } = req.body;
+    const dailyEUR = parseFloat((monthlyEUR / 25).toFixed(4));
+    await mongoose.connection.db.collection("overhead_costs").insertOne({
+      type,
+      label,
+      monthlyEUR: parseFloat(monthlyEUR),
+      dailyEUR,
+      allocations: {},
     });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // Insert new active entry
-    await db.collection("overhead_costs").insertOne({
-      costType: req.params.costType,
-      perMonth,
-      perDay,
-      allocations: old?.allocations ?? {},
-      validFrom: today,
-      validTo: null,
-    });
+// PATCH — rename label only
+router.patch("/overhead/:type/label", async (req, res) => {
+  try {
+    await mongoose.connection.db
+      .collection("overhead_costs")
+      .updateOne(
+        { type: req.params.type },
+        { $set: { label: req.body.label } },
+      );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    res.json({ success: true, perMonth, perDay });
+// DELETE — remove entry
+router.delete("/overhead/:type", async (req, res) => {
+  try {
+    await mongoose.connection.db
+      .collection("overhead_costs")
+      .deleteOne({ type: req.params.type });
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

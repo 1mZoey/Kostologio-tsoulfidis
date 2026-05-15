@@ -56,7 +56,7 @@ function TopBar() {
           {isDark ? <Sun className='w-4 h-4' /> : <Moon className='w-4 h-4' />}
         </button>
 
-        <button
+      <button
           onClick={() => window.electronAPI?.minimizeWindow()}
           className='no-theme-transition p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#2c313c] transition-colors'
         >

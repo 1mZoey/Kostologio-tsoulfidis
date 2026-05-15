@@ -52,8 +52,9 @@ function createWindow() {
     width: 1100,
     height: 720,
     show: false,
-    frame: false,
     titleBarStyle: "hidden",
+    ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,

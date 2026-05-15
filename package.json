@@ -1,25 +1,48 @@
 {
   "name": "kostologio-app",
-  "main": "main.js",
+  "main": ".vite/build/main.js",
+  "version": "1.0.0",
+  "description": "Cost Estimation Application",
+  "author": "Zoi Tsoulfidou",
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "electron": "electron .",
-    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5000 http://localhost:5173 && electron .\""
+    "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5000 http://localhost:5173 && electron .\"",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
+    "@electron-forge/plugin-fuses": "^7.11.1",
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@electron/fuses": "^1.8.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@vitejs/plugin-react": "^6.0.2",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "electron": "^41.0.3",
-    "electron-builder": "^26.8.1",
     "prettier": "3.8.3",
+    "vite": "^8.0.13",
     "wait-on": "^7.2.0"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "electron-squirrel-startup": "^1.0.1",
+    "express": "^5.2.1",
     "lucide": "^0.577.0",
     "lucide-react": "^0.577.0",
+    "mongoose": "^9.6.2",
     "tailwindcss": "^4.2.2"
   }
 }

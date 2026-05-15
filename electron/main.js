@@ -52,12 +52,8 @@ function createWindow() {
     width: 1100,
     height: 720,
     show: false,
+    frame: false,
     titleBarStyle: "hidden",
-    titleBarOverlay: {
-      color: "#ffffff",
-      symbolColor: "#21252b",
-      height: 48,
-    },
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
@@ -73,15 +69,22 @@ function createWindow() {
     mainWindow = null;
   });
 
-  ipcMain.on("theme-change", (_event, isDark) => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.setTitleBarOverlay({
-        color: isDark ? "#21252b" : "#f9fafb",
-        symbolColor: isDark ? "#f8fafc" : "#21252b",
-      });
+  ipcMain.on("window-minimize", () => {
+    if (mainWindow) mainWindow.minimize();
+  });
+
+  ipcMain.on("window-maximize", () => {
+    if (!mainWindow) return;
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
     }
   });
 
+  ipcMain.on("window-close", () => {
+    if (mainWindow) mainWindow.close();
+  });
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {

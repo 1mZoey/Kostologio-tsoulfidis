@@ -10,7 +10,14 @@
 html.theme-transitioning *,
 html.theme-transitioning *::before,
 html.theme-transitioning *::after {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease !important;
+}
+
+html.theme-transitioning .no-theme-transition,
+html.theme-transitioning .no-theme-transition *,
+html.theme-transitioning .no-theme-transition *::before,
+html.theme-transitioning .no-theme-transition *::after {
+  transition: none !important;
 }
 
 /* Custom Scrollbar Styling */

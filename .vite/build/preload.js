@@ -1,0 +1,1 @@
+var{contextBridge:e,ipcRenderer:t}=require(`electron`);e.exposeInMainWorld(`electronAPI`,{minimizeWindow:()=>t.send(`window-minimize`),maximizeWindow:()=>t.send(`window-maximize`),closeWindow:()=>t.send(`window-close`)});

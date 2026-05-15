@@ -16,6 +16,7 @@ export default function Calculator() {
   const location = useLocation();
   const [products, setProducts] = useState([]);
   const [sources, setSources] = useState([]);
+  const CALCULATOR_DRAFT_KEY = "calculatorDraft";
 
   const [selectedProduct, setSelectedProduct] = useState("");
   const [availableFinishes, setAvailableFinishes] = useState([]);
@@ -67,6 +68,30 @@ export default function Calculator() {
   const [saveChoice, setSaveChoice] = useState(null);
 
   useEffect(() => {
+    const savedDraft = localStorage.getItem(CALCULATOR_DRAFT_KEY);
+    if (!savedDraft) return;
+
+    try {
+      const draft = JSON.parse(savedDraft);
+
+      if (!location.state?.editMode && !location.state?.selectedItem) {
+        setSelectedProduct(draft.selectedProduct || "");
+        setSelectedFinish(draft.selectedFinish || "");
+        setSelectedSource(draft.selectedSource || "");
+        setQuantity(draft.quantity || "");
+        setPackaging(draft.packaging || "παλέτα");
+        setProfitMargin(draft.profitMargin || "");
+        setWidthCm(draft.widthCm || "");
+        setQuoteName(draft.quoteName || "");
+        setResult(draft.result || null);
+        setShowMachineBreakdown(draft.showMachineBreakdown || false);
+      }
+    } catch (err) {
+      console.error("Failed to restore calculator draft:", err);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
     Promise.all([axios.get("/api/products"), axios.get("/api/sources")]).then(
       ([prodRes, sourceRes]) => {
         setProducts(prodRes.data);
@@ -99,6 +124,34 @@ export default function Calculator() {
       },
     );
   }, [location.state]);
+
+  useEffect(() => {
+    const draft = {
+      selectedProduct,
+      selectedFinish,
+      selectedSource,
+      quantity,
+      packaging,
+      profitMargin,
+      widthCm,
+      quoteName,
+      result,
+      showMachineBreakdown,
+    };
+
+    localStorage.setItem(CALCULATOR_DRAFT_KEY, JSON.stringify(draft));
+  }, [
+    selectedProduct,
+    selectedFinish,
+    selectedSource,
+    quantity,
+    packaging,
+    profitMargin,
+    widthCm,
+    quoteName,
+    result,
+    showMachineBreakdown,
+  ]);
 
   const fetchAvailableFinishes = async (name) => {
     if (!name) return setAvailableFinishes([]);
@@ -137,6 +190,7 @@ export default function Calculator() {
     setShowMachineBreakdown(false);
     setQuoteName("");
     setSaved(false);
+    localStorage.removeItem(CALCULATOR_DRAFT_KEY);
     if (productSelectRef.current) productSelectRef.current.focus();
   };
 

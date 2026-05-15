@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  setTheme: (isDark) => ipcRenderer.send("theme-change", isDark)
+  minimizeWindow: () => ipcRenderer.send("window-minimize"),
+  maximizeWindow: () => ipcRenderer.send("window-maximize"),
+  closeWindow: () => ipcRenderer.send("window-close"),
 });
